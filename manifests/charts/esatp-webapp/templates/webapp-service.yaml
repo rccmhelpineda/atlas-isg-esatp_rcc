@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "esatp-webapp.fullname" . }}-service
+  labels:
+    run: esatp-webapp
+  {{- include "esatp-webapp.labels" . | nindent 4 }} 
+spec:
+  type: {{ .Values.esatpWebAppAdmContainer.type }}
+  selector:
+    app: esatp-webapp
+    namespec: esatp-internal
+  {{- include "esatp-webapp.selectorLabels" . | nindent 4 }}
+  ports:    
+    - protocol: TCP
+      port: 80
+#      port: 443
+      targetPort: 3000

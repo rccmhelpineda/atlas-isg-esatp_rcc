@@ -1,0 +1,13 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "esatp-webapi.fullname" . }}-hpa
+  labels:
+  {{- include "esatp-webapi.labels" . | nindent 4 }}
+spec:
+  {{- toYaml .Values.esatpWebApi.esatpWebApiHpa | nindent 2 }}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "esatp-webapi.fullname" . }}-deploy
+    

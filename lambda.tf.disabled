@@ -1,0 +1,83 @@
+module "aws_lambda_connectivity" {
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-lambda/aws"
+  
+  providers = {
+    aws.environment = aws.environment
+    aws.security    = aws.security
+  }
+  jfrog_repository_source_path       = "isg-esatp-generic-local/esatp-lambdas/${var.tag_path}/esatp-lambdas.zip"
+  layer_jfrog_repository_source_path = ["isg-esatp-generic-local/esatp-lambdas-layer/${var.tag_path_layer}/esatp-lambdas-layer.zip"]
+  handler                            = "connectivity_test.lambda_handler"
+  name                               = "lf-2-sftp"
+  description                        = "Connectivity Tester"
+  runtime                            = "python3.12"
+  subnet_type                        = "lambda"
+  existing_layer_arns                = []
+  reserved_concurrency               = 10
+  timeout                            = 500
+  memory_size                        = 1024
+  architectures = ["arm64"] #defaults to x86_64 if not specified
+}
+
+module "aws_lambda_sftp" {
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-lambda/aws"
+
+  providers = {
+    aws.environment = aws.environment
+    aws.security    = aws.security
+  }
+  jfrog_repository_source_path       = "isg-esatp-generic-local/esatp-lambdas/${var.tag_path}/esatp-lambdas.zip"
+  layer_jfrog_repository_source_path = ["isg-esatp-generic-local/esatp-lambdas-layer/${var.tag_path_layer}/esatp-lambdas-layer.zip"]
+  handler                            = "sftp_client.lambda_handler"
+  name                               = "lf-sftp"
+  description                        = "SFTP Script"
+  runtime                            = "python3.12"
+  subnet_type                        = "lambda"
+  existing_layer_arns                = []
+  reserved_concurrency               = 10
+  timeout                            = 500
+  memory_size                        = 1024
+  architectures = ["arm64"] #defaults to x86_64 if not specified
+}
+
+module "aws_lambda_conn_2_postgres" {
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-lambda/aws"
+
+  providers = {
+    aws.environment = aws.environment
+    aws.security    = aws.security
+  }
+  jfrog_repository_source_path       = "isg-esatp-generic-local/esatp-lambdas/${var.tag_path}/esatp-lambdas.zip"
+  layer_jfrog_repository_source_path = ["isg-esatp-generic-local/esatp-lambdas/${var.tag_path_layer}/esatp-lambdas.zip"]
+  handler                            = "lambda_to_postgres_test.lambda_handler"
+  name                               = "lf-2-psql"
+  description                        = "lambda to prostgres"
+  runtime                            = "python3.12"
+  subnet_type                        = "lambda"
+  existing_layer_arns                = []
+  reserved_concurrency               = 10
+  timeout                            = 500
+  memory_size                        = 1024
+  architectures = ["arm64"] #defaults to x86_64 if not specified
+}
+
+module "aws_lambda_conn_2_s3" {
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-lambda/aws"
+
+  providers = {
+    aws.environment = aws.environment
+    aws.security    = aws.security
+  }
+  jfrog_repository_source_path       = "isg-esatp-generic-local/esatp-lambdas/${var.tag_path}/esatp-lambdas.zip"
+  layer_jfrog_repository_source_path = ["isg-esatp-generic-local/esatp-lambdas/${var.tag_path_layer}/esatp-lambdas.zip"]
+  handler                            = "lambda_to_s3_test.lambda_handler"
+  name                               = "lf-2-s3"
+  description                        = "Lambda to s3"
+  runtime                            = "python3.12"
+  subnet_type                        = "lambda"
+  existing_layer_arns                = []
+  reserved_concurrency               = 10
+  timeout                            = 500
+  memory_size                        = 1024
+  architectures = ["arm64"] #defaults to x86_64 if not specified
+}

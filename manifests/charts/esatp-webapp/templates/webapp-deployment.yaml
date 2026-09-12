@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "esatp-webapp.fullname" . }}-admin-deploy
+  labels:
+  {{- include "esatp-webapp.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.esatpWebApp.replicasAdm }}
+  strategy:    
+    type: RollingUpdate    
+    rollingUpdate:      
+      maxSurge: 25%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: esatp-webapp-admin
+    {{- include "esatp-webapp.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: esatp-webapp-admin
+        namespec: esatp-internal
+      {{- include "esatp-webapp.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccountName }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: {{ quote .Values.global.karpenterKey }}
+                  operator: In
+                  values:
+                  - {{ quote .Values.global.karpenterNodePoolName }}
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: esatp-webapp
+              topologyKey: topology.kubernetes.io/zone
+      tolerations:
+      - key: {{ quote .Values.global.karpenterKey }}
+        operator: "Equal"
+        value: {{ quote .Values.global.karpenterNodePoolName }}
+        effect: "NoSchedule"
+      containers:
+      - env:
+        - name: JWT_SECRET
+          value: {{ quote .Values.global.jwtSecret }}
+        - name: JWT_EXPIRATION
+          value: {{ quote .Values.global.jwtExpire }}
+        - name: JWT_ISSUER
+          value: {{ quote .Values.global.jwtIssuer }}
+        - name: JWT_AUDIENCE
+          value: {{ quote .Values.global.jwtAudience }}
+        - name: CORE_API_URL
+          value: {{ quote .Values.global.nextPubLocEndpointAdm }}
+        - name: TZ
+          value: {{ quote .Values.esatpWebApp.esatpWebAppContainer.env.tz}}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        - name: OKTA_CLIENT_ID
+          value: {{ quote .Values.global.oktaClientID }}
+        - name: OKTA_CLIENT_SECRET
+          value: {{ quote .Values.global.oktaClientSec }}
+        - name: OKTA_ISSUER_URL
+          value: {{ quote .Values.global.oktaIssuer }}
+        - name: WEBAPI_SERVICE_ENDPOINT
+          value: {{ quote .Values.global.webApiServiceURL }}
+        - name: MAINTENANCE_MODE
+          value: {{ quote .Values.global.maintenanceMode }}
+        image: {{ .Values.esatpWebApp.esatpWebAppContainer.image.repository }}:{{ .Values.esatpWebApp.esatpWebAppContainer.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.esatpWebApp.esatpWebAppContainer.imagePullPolicy }}
+        name: esatp-webapp-container
+        livenessProbe:
+          httpGet:
+            path: /adm/sign-in
+            port: 3000
+          initialDelaySeconds: 120
+          periodSeconds: 60
+          timeoutSeconds: 30
+          failureThreshold: 5
+        ports:
+        - containerPort: 3000
+        resources: {{- toYaml .Values.esatpWebApp.esatpWebAppAdmContainer.resources | nindent 10 }}
+        readinessProbe:
+          httpGet:
+            path: /adm/sign-in
+            port: 3000
+          initialDelaySeconds: 120
+          periodSeconds: 60
+          timeoutSeconds: 30
+          failureThreshold: 5
+        volumeMounts:       
+          - name: webapp-conf
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+      imagePullSecrets:
+        - name: {{ .Values.global.imagePullSecret }}
+      securityContext:
+        #runAsGroup: 998
+        #runAsUser: 1000
+        #runAsNonRoot: true
+        #allowPrivilegeEscalation: false
+        #seccompProfile:
+        #  type: RuntimeDefault
+        #capabilities:
+        #  drop:
+        #    - NET_RAW   # Drop the capability to create raw network sockets
+        #    - SYS_PTRACE  # Drop the capability to use ptrace (process debugging and inspection)
+      volumes:
+        - name: webapp-conf
+          configMap:
+            name: webapp-config
+
+

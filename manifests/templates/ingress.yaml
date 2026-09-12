@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.ingressName }}
+  namespace: {{ .Values.nameSpace }}
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/group.name: {{ .Values.elbGroupName }} 
+    alb.ingress.kubernetes.io/load-balancer-name: {{ .Values.elbName }}
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/backend-protocol: HTTP                      
+    alb.ingress.kubernetes.io/tags: {{ .Values.tagsPrv }}
+#    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.elbCertArnInternal }} 
+#    alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-FS-1-2-2019-08
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/inbound-cidrs: 10.0.0.0/8
+spec:
+  rules:
+    - host: {{ .Values.hostedZone }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.webappService }} 
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.webapiService }} 
+                port:
+                  number: 80
+

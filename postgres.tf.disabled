@@ -1,0 +1,30 @@
+module "aurora_module" {
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-rds-aurora-postgresql/aws"
+
+  providers = {
+    aws.security           = aws.security,
+    aws.environment        = aws.environment,
+    aws.route53            = aws.route53,
+    aws.instance_scheduler = aws.instance_scheduler
+  }
+
+  name                 = var.postgres_name
+  major_engine_version = 18
+  allow_ingress_from   = ["sa::workernode1","sa::workernode2","etl_mybss","mybss_gt","mybss_gt_eom","sap_to_s3"]
+  parameter_group_name = "aurora-postgresql18"
+
+  # Enabling this object switches the cluster to Serverless v2.
+  serverless_v2 = {
+    min_capacity            = 0.5 # ACUs
+    max_capacity            = 4   # ACUs
+    number_of_read_replicas = 1
+  }
+
+  # Optional: ACU alarm threshold (defaults to 50). Add the metric to enable_alarms to create it.
+  aurora_serverless_capacity_threshold = 3
+
+  enable_alarms = [
+    "CPUUtilization", "FreeableMemory", "DatabaseConnections", "RDSToAuroraPostgreSQLReplicaLag", "ReadIOPS",
+    "WriteIOPS", "SnapshotStorageUsed", "ServerlessDatabaseCapacity"
+  ]
+}

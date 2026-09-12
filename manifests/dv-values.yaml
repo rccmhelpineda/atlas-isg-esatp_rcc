@@ -1,0 +1,156 @@
+global:
+  imagePullSecret: isg-esatp-dv-jfrog-secret
+  serviceAccountName: isg-esatp-dv-irsa-sa
+  awsBucketName1: isg-esatp-dv-storage-os
+  awsBucketName2: isg-esatp-dv-scripts-os
+  awsSNSName: isg-esatp-dv-app-sns
+  awsMailSender: noreply-esatp-dev@globe.com.ph
+  awsEfsOnEks: isg-esatp-dv-efs
+  aTS: yellowpiggy2
+  rTS: whiterabbit2
+  jwtSecret: yellowpiggy2
+  jwtExpire: 30m
+  jwtIssuer: esatp-webapp
+  jwtAudience: esatp-api
+  maintenanceMode: "false"
+  oktaIssuer: https://globe.okta.com
+  oktaClientID: 
+  oktaClientSec: 
+  nameSpace: isg-esatp-dv-kns
+  tlsCertNamePrv: tls-certs-prv
+  areseyPKName: rsa-private-key
+  sslName: ssl-cert
+  configMapName: configmap-sftp
+  isLocal: false
+  webApiServiceURL: http://app-isg-esatp-dv-esatp-webapi-service.isg-esatp-dv-kns.svc.cluster.local
+  esatp_root_url: https://esatp-dv.globetel.cloud
+  authURL: https://esatp-dv.globetel.cloud
+  karpenterNodePoolName: isg-esatp-dv-np-esatp
+  karpenterKey: karpenter.sh/nodepool
+  dbReadNode: isg-esatp-dv-app-db-hs-02.cz662ugouo8h.ap-southeast-1.rds.amazonaws.com
+  dbPort: 1769
+
+ingressName: isg-esatp-dv-ingress
+elbCertArn: 
+elbName: isg-esatp-dv-eks-ingress-alb-int
+tagsPrv: "portfolio=isg,app=ES-ATP,Platform Name=ES-ATP,Project=ES-ATP,WBS Code=D-I-WP01-IA2173-26,Deployment=DEV:PREP,Data Classification=PRIVATE"
+elbGroupName: isg-esatp-dv
+hostedZone: esatp-dv.globetel.cloud
+webappService: app-isg-esatp-dv-esatp-webapp-service
+webapiService: app-isg-esatp-dv-esatp-webapi-service
+secretStore: isg-esatp-dv-secret-store
+
+dbSec:
+- sKey: DB_USER
+  sManagerName: isg/esatp/dv/esatp_sme-sm
+  sManagerKey: username
+- sKey: DB_PASS
+  sManagerName: isg/esatp/dv/esatp_sme-sm
+  sManagerKey: password
+- sKey: DB_NAME
+  sManagerName: isg/esatp/dv/esatp_sme-sm
+  sManagerKey: dbname
+- sKey: DB_DIALECT
+  sManagerName: isg/esatp/dv/esatp_sme-sm
+  sManagerKey: engine
+- sKey: DB_HOST
+  sManagerName: isg/esatp/dv/esatp_sme-sm
+  sManagerKey: host
+
+esesel:
+  #  seeartee: ZHVtbXkK
+  seeartee: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tDQpNSUlIbHpDQ0JYK2dBd0lCQWdJVFpRQUFBSjJuMlZsaWJtQzR4QUFBQUFBQW5UQU5CZ2txaGtpRzl3MEJBUXNGDQpBREJKTVJNd0VRWUtDWkltaVpQeUxHUUJHUllEWTI5dE1SZ3dGZ1lLQ1pJbWlaUHlMR1FCR1JZSVoyeHZZbVYwDQpaV3d4R0RBV0JnTlZCQU1URDBkc2IySmxMVWx6YzNWcGJtZERRVEFlRncweU16RXlNamN3TURNNU16WmFGdzB5DQpOVEV5TWpZd01ETTVNelphTUlHQk1Rc3dDUVlEVlFRR0V3SlFTREVQTUEwR0ExVUVDQk1HVFdGdWFXeGhNUTh3DQpEUVlEVlFRSEV3WlVZV2QxYVdjeEhEQWFCZ05WQkFvVEUwZHNiMkpsSUZSbGJHVmpiMjBzSUVsdVl5NHhEREFLDQpCZ05WQkFzVEEwbFRSekVrTUNJR0ExVUVBeE1iWVhkekxXaHBjRzF6TFc1eWNHd3VaMnh2WW1WMFpXd3VZMjl0DQpNSUlCSWpBTkJna3Foa2lHOXcwQkFRRUZBQU9DQVE4QU1JSUJDZ0tDQVFFQTBMTUZESldmazlhZjdJMjZpWFBTDQpRTEdlNWpQM3dHOEVDeVlsejJBWlNSU2VudHg2d3NrMnpNdGUyT0gvVE5EVlg2L216aTJJTGszZ3BuVGx6UmsxDQpRb1VsM3JDdHBsZ0tmUnVuditSQXp2SCtFdmZlVTdVa3hwaXFHSXQzVnRXbVo1bnpxR1hvTFZER053R0R1TXhNDQpkbkxzQU5tcjhTQnB1VHV5UTBvWHNBZVhQSlpCYUNHRk1jOW9TNTh3RTdBSUxvMUlyc1FkNTBzMUZjNnRvNGJkDQpOWmh4d2NOY1ZZdGxqV083Snc5TG00L3dGMmNaeU0xL3ZOcWJKbDNhT0NSUzJybG1YUHAwaVRWR3F6VE9aaldPDQpwMDdOQU9aY3Z6aU9uT0k5RHhkR0NTN3U4YzlzVWg5c21CMzhYbFVtTXgyYUlmckI2c2ppWXVtVE9uODhqcXdmDQpOUUlEQVFBQm80SURQVENDQXprd0hRWURWUjBPQkJZRUZMUmdKcWZ3cnVJWDBZRDNhdWhqZWdFdEdyeXVNQjhHDQpBMVVkSXdRWU1CYUFGT3NBNmFEMXEzZGhIRVZKa0M5NERodHZCSEZXTUlJQkVRWURWUjBmQklJQkNEQ0NBUVF3DQpnZ0VBb0lIOW9JSDZob0cvYkdSaGNEb3ZMeTlEVGoxSGJHOWlaUzFKYzNOMWFXNW5RMEVzUTA0OVIxUkRVRkpFDQpWbE5XU1VOQk1EQXhMRU5PUFVORVVDeERUajFRZFdKc2FXTWxNakJMWlhrbE1qQlRaWEoyYVdObGN5eERUajFUDQpaWEoyYVdObGN5eERUajFEYjI1bWFXZDFjbUYwYVc5dUxFUkRQV2RzYjJKbGRHVnNMRVJEUFdOdmJUOWpaWEowDQphV1pwWTJGMFpWSmxkbTlqWVhScGIyNU1hWE4wUDJKaGMyVS9iMkpxWldOMFEyeGhjM005WTFKTVJHbHpkSEpwDQpZblYwYVc5dVVHOXBiblNHTm1oMGRIQTZMeTlqY213dVoyeHZZbVYwWld3dVkyOXRMME5sY25SRmJuSnZiR3d2DQpSMnh2WW1VdFNYTnpkV2x1WjBOQkxtTnliRENDQVNVR0NDc0dBUVVGQndFQkJJSUJGekNDQVJNd2dhOEdDQ3NHDQpBUVVGQnpBQ2hvR2liR1JoY0Rvdkx5OURUajFIYkc5aVpTMUpjM04xYVc1blEwRXNRMDQ5UVVsQkxFTk9QVkIxDQpZbXhwWXlVeU1FdGxlU1V5TUZObGNuWnBZMlZ6TEVOT1BWTmxjblpwWTJWekxFTk9QVU52Ym1acFozVnlZWFJwDQpiMjRzUkVNOVoyeHZZbVYwWld3c1JFTTlZMjl0UDJOQlEyVnlkR2xtYVdOaGRHVS9ZbUZ6WlQ5dlltcGxZM1JEDQpiR0Z6Y3oxalpYSjBhV1pwWTJGMGFXOXVRWFYwYUc5eWFYUjVNRjhHQ0NzR0FRVUZCekFDaGxOb2RIUndPaTh2DQpZM0pzTG1kc2IySmxkR1ZzTG1OdmJTOURaWEowUlc1eWIyeHNMMGRVUTFCU1JGWlRWa2xEUVRBd01TNW5iRzlpDQpaWFJsYkM1amIyMWZSMnh2WW1VdFNYTnpkV2x1WjBOQkxtTnlkREFMQmdOVkhROEVCQU1DQmFBd1BBWUpLd1lCDQpCQUdDTnhVSEJDOHdMUVlsS3dZQkJBR0NOeFVJZ3ZmekVJR2RqU1dHN1pVMGl2aE5nNytkZGp1SHNMdHNocGZ4DQpSQUlCWkFJQkJqQWRCZ05WSFNVRUZqQVVCZ2dyQmdFRkJRY0RBUVlJS3dZQkJRVUhBd0l3SndZSkt3WUJCQUdDDQpOeFVLQkJvd0dEQUtCZ2dyQmdFRkJRY0RBVEFLQmdnckJnRUZCUWNEQWpBbUJnTlZIUkVFSHpBZGdodGhkM010DQphR2x3YlhNdGJuSndiQzVuYkc5aVpYUmxiQzVqYjIwd0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dJQkFHT0FMVDNUDQppV05UKzZJY3ZHTEFydjdIeklKeFVKTHRoSTRTTjVJYzhCSUNhY0pnaEJESEdtVk5aWk96UitoaisveWRjdmVLDQpMNGJQMUp0R09NWnVaWVh4byttbTBZZ2MzT2R2RS9GVGd1UHhHU3FjWlZXRnNjbWp3MTh0VnJTa2hMMXliNnBtDQp5NFJqVnZNKzFaeFFTbi9lSEJFb0ZHWFRrSFlvQ1hxWmFLOUdndDU5NGtHajRMdkJYSUxERmlmTEduSGkzeFl3DQpuTExGWFhmSnY3WEZyM25ralJVVlp3ZktiNHNIUUFmUTNvakk2OVlweHdRTmExZWMzbnhZQzdxMmVHYXNBSk93DQptMmlVek14SUJXVnpuSzVjSnBkZVdtRmNxdURGV2VFMFVqZ2c0cytVWnpYUSsrQmdwaXBZd0wwRzhRLyttdVQ1DQpTb2xaVC9ycmpVS1hESGpTZ25XVWJxSWl6cTk4ekljTFh6a254cHFMZHRXT01rdEtUN1ZvTThpQ3h2WUozODFFDQoxdEx3eC8wNFh4SFRMWVBiSE1VaVcxMHV3UEdEak43bFlZRG9XRFZIUzlheDVMWW5nbmpkNk9oVjJKYWNwdVB2DQo5ajRSajFLMzlxdVZNOGppRlVzdkxING15OHo5SDlNcUZwZzY5S3EwWHg4WEQrVStod3EzaWlvYm9memNyZTNsDQo3UXBQNkJQVjRqVDNtNnEvMnJZMUlIKzdPVDNUMDJUUDlHcVhITHVQcUpLYnQvMzEvNWNRN0pKUlIrMDdSNU1vDQpIclB6RWZZeEtGTDM0Qnp3Y3NhaTZBenhQcXAraTFRRzhwU296dzZyQlFYWW1MZWtSSEc5KzQvZ3ppN1ExalpCDQprRm5MYmhsVVhWRWt5VHNIUkdsbEY5aGlVOG40WGE0VVNZYU4NCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0NCi0tLS0tQkVHSU4gQ0VSVElGSUNBVEUtLS0tLQ0KTUlJSGx6Q0NCWCtnQXdJQkFnSVRaUUFBQUordnBHOG1SdU5RN0FBQUFBQUFuekFOQmdrcWhraUc5dzBCQVFzRg0KQURCSk1STXdFUVlLQ1pJbWlaUHlMR1FCR1JZRFkyOXRNUmd3RmdZS0NaSW1pWlB5TEdRQkdSWUlaMnh2WW1WMA0KWld3eEdEQVdCZ05WQkFNVEQwZHNiMkpsTFVsemMzVnBibWREUVRBZUZ3MHlNekV5TWpjd01EUTBNakphRncweQ0KTlRFeU1qWXdNRFEwTWpKYU1JR0JNUXN3Q1FZRFZRUUdFd0pRU0RFUE1BMEdBMVVFQ0JNR1RXRnVhV3hoTVE4dw0KRFFZRFZRUUhFd1pVWVdkMWFXY3hIREFhQmdOVkJBb1RFMGRzYjJKbElGUmxiR1ZqYjIwc0lFbHVZeTR4RERBSw0KQmdOVkJBc1RBMGxUUnpFa01DSUdBMVVFQXhNYmRtRnNMV2hwY0cxekxXNXljR3d1WjJ4dlltVjBaV3d1WTI5dA0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUE0bHIvUXR0aUwvQ0MraVd4RVlhNA0KOThncjlUWVhRNnlzK28xaDRTRFJUelpZK1BiVjNaZThjc2I3bnJyalVBMnZwWkJKZzVPem1RM2pqZjIzT2RiZw0KNk1UUEJhcUN2WndodWFSTnd5aE9nU2NzY1dSVXBtaEgvUmhHVENMTStNVGhUay9iYnp5M0RZWURLdU9GaXA5Kw0KcUdLVUttN2sxUFFISDlzQnNpMnFiTWY2UU0yejhmdkZkOUFxVVMyYmtBbDdUTmdPcmpXdngzYnBYcmJ6c0djWg0KbmZhRnV6WXBiRXUyRWVUK2F2ZUk1N24ySG5LTzg0eDZKOVB2MHBHc3JlNXpkZGx3QnJVN1crUFhMN3FMUVZnbg0KWFAvbzRaWmY0ays5NjB2UmFOZisvd1RFcUprckdmQy9lRjBUenY2ZWNoWWUrSGxRUFgwTFkrMXphbFNIaDZtRA0KMXdJREFRQUJvNElEUFRDQ0F6a3dIUVlEVlIwT0JCWUVGSktkaXlPVGhucXdHZnpuTnBjMGpWVkcrTTJSTUI4Rw0KQTFVZEl3UVlNQmFBRk9zQTZhRDFxM2RoSEVWSmtDOTREaHR2QkhGV01JSUJFUVlEVlIwZkJJSUJDRENDQVFRdw0KZ2dFQW9JSDlvSUg2aG9HL2JHUmhjRG92THk5RFRqMUhiRzlpWlMxSmMzTjFhVzVuUTBFc1EwNDlSMVJEVUZKRQ0KVmxOV1NVTkJNREF4TEVOT1BVTkVVQ3hEVGoxUWRXSnNhV01sTWpCTFpYa2xNakJUWlhKMmFXTmxjeXhEVGoxVA0KWlhKMmFXTmxjeXhEVGoxRGIyNW1hV2QxY21GMGFXOXVMRVJEUFdkc2IySmxkR1ZzTEVSRFBXTnZiVDlqWlhKMA0KYVdacFkyRjBaVkpsZG05allYUnBiMjVNYVhOMFAySmhjMlUvYjJKcVpXTjBRMnhoYzNNOVkxSk1SR2x6ZEhKcA0KWW5WMGFXOXVVRzlwYm5TR05taDBkSEE2THk5amNtd3VaMnh2WW1WMFpXd3VZMjl0TDBObGNuUkZibkp2Ykd3dg0KUjJ4dlltVXRTWE56ZFdsdVowTkJMbU55YkRDQ0FTVUdDQ3NHQVFVRkJ3RUJCSUlCRnpDQ0FSTXdnYThHQ0NzRw0KQVFVRkJ6QUNob0dpYkdSaGNEb3ZMeTlEVGoxSGJHOWlaUzFKYzNOMWFXNW5RMEVzUTA0OVFVbEJMRU5PUFZCMQ0KWW14cFl5VXlNRXRsZVNVeU1GTmxjblpwWTJWekxFTk9QVk5sY25acFkyVnpMRU5PUFVOdmJtWnBaM1Z5WVhScA0KYjI0c1JFTTlaMnh2WW1WMFpXd3NSRU05WTI5dFAyTkJRMlZ5ZEdsbWFXTmhkR1UvWW1GelpUOXZZbXBsWTNSRA0KYkdGemN6MWpaWEowYVdacFkyRjBhVzl1UVhWMGFHOXlhWFI1TUY4R0NDc0dBUVVGQnpBQ2hsTm9kSFJ3T2k4dg0KWTNKc0xtZHNiMkpsZEdWc0xtTnZiUzlEWlhKMFJXNXliMnhzTDBkVVExQlNSRlpUVmtsRFFUQXdNUzVuYkc5aQ0KWlhSbGJDNWpiMjFmUjJ4dlltVXRTWE56ZFdsdVowTkJMbU55ZERBTEJnTlZIUThFQkFNQ0JhQXdQQVlKS3dZQg0KQkFHQ054VUhCQzh3TFFZbEt3WUJCQUdDTnhVSWd2ZnpFSUdkalNXRzdaVTBpdmhOZzcrZGRqdUhzTHRzaHBmeA0KUkFJQlpBSUJCakFkQmdOVkhTVUVGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd0p3WUpLd1lCQkFHQw0KTnhVS0JCb3dHREFLQmdnckJnRUZCUWNEQVRBS0JnZ3JCZ0VGQlFjREFqQW1CZ05WSFJFRUh6QWRnaHQyWVd3dA0KYUdsd2JYTXRibkp3YkM1bmJHOWlaWFJsYkM1amIyMHdEUVlKS29aSWh2Y05BUUVMQlFBRGdnSUJBRDNOQjNVdQ0KRkMvNmd3ZERPdko2SG1Ic2hxNEw4RURoN2hrR2ZEMnBXeVRyUnlPK3pIRUdzL2kzaHUwd2grZDd5S1VoNW9ocw0KRjdHdEVqeVdTOGd1TzNiSC9PQUhoVFNSOVRLUVVzcGF4V0xzRlFhaDhIckNTZ3E2N0NXaTFXTHdrVEladkQxMg0Kdk1zY3pKQUZqSDBzZ1BDSGpPaFlLK0VjTC84MXd6ZzIvR1A3RGZ5SlY5bVJWRU5kZFcvdEkwVll6bVR5VmNPVw0KM25YSTMyOTdkL3ZHd0NzSzd5Q1JacitjbEN5K3FFa1RmZC9BNEFGTDFLL05oM2lJVXpha05yVThHTGdIemJ5Mw0KOXN3Qy9EUkRXVWJJMVI4aE4zMFFtNWlkR3FGOEdCTFU2dmhNNTYwM2hwMTRsclBndk8xdXI4MDQzNTdDa0c5Mw0KL1JVOWtNM0R3ekdsRk8wZk05NHZnc0NNUkF5VzNNbTJubjM0Y0tYQnRBbTVJOGxsL3g3Mm0reWgzUzBQUzYxWg0KOEFyNjhCNkd0R3U3dUQ4Rk5EZGFTUnRDVkR6TS8zL1llaUdiM0gvbnYvMGRBMmtKY2NLckhWQ00zRmFWQjg1UA0KWmlQMXFMVXZlSnpOb004aGk5Vzd5Rm5sQzhSb1d6R2dwREZZNDZQS1ZaQ3h5MFhCZkJTNUswWG12VzFPVmVVYg0KWTlUQlMzTUVkWG9EUWlYMDF0UTIvcTZPc2t2S0pQcDV1bXNRKzMzUE92VWtLcDduZGpjTHhmRk80RFUzN0YwaQ0KcjA3dEZNTmtOQWxSREh0eTcwbHJONVh0UVlRZlZBNEp2dUora2FFcCtWVFNhcjdIVDdmTDNUZ29qenhiYVFVYQ0KSStPTmlDc0YwNS9LMHpaNVFCWmVvT096MjdXMWdLK2xyMzh6DQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tDQo=
+
+appSec:
+  - sKey: TLS_KEY
+    sManagerName: isg/esatp/dv/esatp_app-sm
+    sManagerKey: tls_key
+  - sKey: TLS_CERT
+    sManagerName: isg/esatp/dv/esatp_app-sm
+    sManagerKey: tls_crt
+  - sKey: TLS_RSA_KEY
+    sManagerName: isg/esatp/dv/esatp_app-sm
+    sManagerKey: rsa_key
+
+esatp-webapp:
+  esatpWebApp:
+    esatpWebAppHpa:
+      maxReplicas: 2
+      minReplicas: 1
+      metrics:
+        - resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 60
+          type: Resource
+    esatpWebAppContainer:
+      image:
+        repository: globe.pe.jfrog.io/isg-esatp-docker-local-nonprod/dv/esatp-webapp
+        tag: v0.0.1
+      resources:
+        limits:
+          cpu: "250m"
+          memory: "360Mi"
+        requests:
+          cpu: "150m"
+          memory: "260Mi"
+    replicas: 1
+esatp-webapi:
+  esatpWebApi:
+    esatpWebApiHpa:
+      maxReplicas: 2
+      minReplicas: 1
+      metrics:
+        - resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 60
+          type: Resource
+    esatpWebApiSQSHpa:
+      maxReplicas: 2
+      minReplicas: 1
+      metrics:
+        - resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 60
+          type: Resource
+    esatpWebApiContainer:
+      image:
+        repository: globe.pe.jfrog.io/isg-esatp-docker-local-nonprod/dv/esatp-webapi
+        tag: v0.0.1
+      resources:
+        limits:
+          cpu: "300m"
+          memory: "460Mi"
+        requests:
+          cpu: "250m"
+          memory: "360Mi"
+    esatpWebApiSQSContainer:
+      image:
+        repository: globe.pe.jfrog.io/isg-esatp-docker-local-nonprod/dv/esatp-webapi
+      resources:
+        limits:
+          cpu: "350m"
+          memory: "400Mi"
+        requests:
+          cpu: "300m"
+          memory: "300Mi"
+    esatpWebApiCronJobContainer:
+      image:
+        repository: globe.pe.jfrog.io/isg-esatp-docker-local-nonprod/dv/esatp-webapi
+      resources:
+        limits:
+          cpu: "400m"
+          memory: "500Mi"
+        requests:
+          cpu: "300m"
+          memory: "400Mi"
+    replicas: 1
+    replicasSQS: 1
+
+
+  

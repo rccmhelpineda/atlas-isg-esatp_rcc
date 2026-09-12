@@ -1,0 +1,22 @@
+module "aws_lambda_connect" {
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-lambda-async/aws"
+
+  providers = {
+    aws.environment = aws.environment
+    aws.security    = aws.security
+    aws.devops      = aws.devops
+  }
+
+  jfrog_repository_source_path       = "isg-esatp-generic-local/esatp-lambdas/${var.tag_path}/esatp-lambdas.zip"
+  layer_jfrog_repository_source_path = ["isg-esatp-generic-local/esatp-lambdas-layer/${var.tag_path_layer}/esatp-lambdas-layer.zip"]
+  handler                            = "connectivity_test.lambda_handler"
+  name                               = "lf_2_server"
+  description                        = "connectivity test lambda"
+  runtime                            = "python3.12"
+  subnet_type                        = "lambda"
+  existing_layer_arns                = []
+  allow_invoke_from_sns              = []
+  reserved_concurrency               = 10
+  timeout                            = 500
+  memory_size                        = 256
+}

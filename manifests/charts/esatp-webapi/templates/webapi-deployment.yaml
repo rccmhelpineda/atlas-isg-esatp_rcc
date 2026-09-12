@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "esatp-webapi.fullname" . }}-deploy
+  labels:
+  {{- include "esatp-webapi.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.esatpWebApi.replicas }}
+  strategy:    
+    type: RollingUpdate    
+    rollingUpdate:      
+      maxSurge: 25%  
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: esatp-webapi
+    {{- include "esatp-webapi.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: esatp-webapi
+        namespec: esatp-internal
+      {{- include "esatp-webapi.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ .Values.global.serviceAccountName }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: {{ quote .Values.global.karpenterKey }}
+                  operator: In
+                  values:
+                  - {{ quote .Values.global.karpenterNodePoolName }}
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: esatp-webapi
+              topologyKey: topology.kubernetes.io/zone
+      tolerations:
+      - key: {{ quote .Values.global.karpenterKey }}
+        operator: "Equal"
+        value: {{ quote .Values.global.karpenterNodePoolName }}
+        effect: "NoSchedule"
+      containers:
+      - env:
+        - name: TZ
+          value: {{ quote .Values.esatpWebApi.esatpWebApiContainer.env.tz }}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        - name: PORT
+          value: "3000"
+        - name: PG_DB
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.global.secretNameDB }}
+              key: DB_NAME
+        - name: PG_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.global.secretNameDB }}
+              key: DB_USER
+        - name: PG_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.global.secretNameDB }}
+              key: DB_PASS
+        - name: PG_DIALECT
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.global.secretNameDB }}
+              key: DB_DIALECT
+        - name: PG_HOST
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.global.secretNameDB }}
+              key: DB_HOST
+        - name: PG_PORT
+          value: {{ quote .Values.global.dbPort }}
+        - name: PG_HOST_READONLY
+          value: {{ quote .Values.global.dbReaderNode }}
+        - name: AWS_BUCKET_NAME_STORAGE
+          value: {{ quote .Values.global.awsBucketName1 }}
+        - name: AWS_BUCKET_NAME_SCRIPTS
+          value: {{ quote .Values.global.awsBucketName2 }}
+        - name: ACCESS_TOKEN_SECRET
+          value: {{ quote .Values.global.aTS }}
+        - name: REFRESH_TOKEN_SECRET
+          value: {{ quote .Values.global.rTS }}
+        - name: AWS_EMAIL_SENDER
+          value: {{ quote .Values.global.awsMailSender }}    
+        - name: ADMIN_EMAIL
+          value: {{ quote .Values.global.awsMailSender }}    
+        - name: AWS_LOCAL
+          value: {{ quote .Values.global.isLocal }}
+        - name: esatp_ROOT_URL
+          value: {{ quote .Values.global.esatp_root_url }}
+        - name: MAINTENANCE_MODE
+          value: {{ quote .Values.global.maintenanceModeAdm }}
+#        - name: ENTRYPOINT_SCRIPT
+#          value: "npm run start"
+#        - name: PASSPHRASE
+#          value: "esatp-20250210"
+        image: {{ .Values.esatpWebApi.esatpWebApiContainer.image.repository }}:{{ .Values.esatpWebApi.esatpWebApiContainer.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.esatpWebApi.esatpWebApiContainer.imagePullPolicy }}
+        name: esatp-webapi-container
+        livenessProbe:
+          httpGet:
+            path: /webapi/health-check
+            port: 3000
+          initialDelaySeconds: 180
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        ports:
+        - containerPort: 3000
+        resources: {{- toYaml .Values.esatpWebApi.esatpWebApiAdmContainer.resources | nindent 10 }}
+        readinessProbe:
+          httpGet:
+            path: /webapi/healthz
+            port: 3000
+          initialDelaySeconds: 120
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        volumeMounts:
+      imagePullSecrets:
+        - name: {{ .Values.global.imagePullSecret }}
+      securityContext:
+        # runAsGroup: 998
+        # runAsUser: 1000
+        # runAsNonRoot: true
+        # allowPrivilegeEscalation: false
+        #seccompProfile:
+        #  type: RuntimeDefault
+        # capabilities:
+        #   drop:
+        #     - NET_RAW   # Drop the capability to create raw network sockets
+        #     - SYS_PTRACE  # Drop the capability to use ptrace (process debugging and inspection)
+      volumes:
