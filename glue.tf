@@ -1,8 +1,6 @@
 ###
 module "glue_etl" {
-  # source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-glue/aws"
   source = "./modules/aws-glue"
-  # version = "~>1.5.1"
 
   providers = {
     aws.environment = aws.environment,

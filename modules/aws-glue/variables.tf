@@ -3,6 +3,13 @@ variable "name" {
   description = "Component name / prefix"
 }
 
+# Default matches values/dv.tfvars env_prefix. Not passed from glue_*.tf (WORA).
+variable "env_prefix" {
+  type        = string
+  default     = "isg-esatp-dv"
+  description = "HMD-style prefix for Glue connection/job names"
+}
+
 variable "s3_bucket_name" {
   type        = list(string)
   description = "Bucket names"

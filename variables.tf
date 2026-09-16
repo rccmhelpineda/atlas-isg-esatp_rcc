@@ -1,3 +1,8 @@
+variable "dbPort" {
+  type        = string
+  description = "Port for the Postgres database"
+}
+
 variable "irsa_name" {
   type        = string
   description = "eks service account"
@@ -11,7 +16,6 @@ variable "irsa_name_2" {
 variable "ses_subdomain" {
    type        = string
    description = "ses subdomain variable"
-   default     = ""
 }
 
 variable "security_aliases_prv" {
@@ -27,7 +31,6 @@ variable "security_aliases_data" {
 variable "sns_name" {
   type        = list(string)
   description = "sns topic"  
-  default     = []
 }
 
 variable "efs_name" {
@@ -172,7 +175,6 @@ variable "read_capacity" {
 
 variable "sns_subscribers" {
     type = list(string)
-    default = []
 }
 
 variable "script_bucket" {
@@ -183,15 +185,6 @@ variable "storage_bucket" {
     type = string
 }
 
-#variable "db_secret_arn" {
-#  description = "ARN for the database credentials in AWS Secrets Manager"
-#  type        = string
-#}
-
-#data "aws_secretsmanager_secret_version" "db_credentials" {
-#  secret_id = var.db_secret_arn
-#}
-
 variable "default_passed_parameter" {
   description = "Default --passed_parameter / bill-cycle suffix used in specs (01 = BC01)."
   type        = string
@@ -200,102 +193,45 @@ variable "default_passed_parameter" {
 
 variable "glue_job_configs" {
   type = object({
-    worker_type = string
-    number_of_workers  = number
-    glue_version       = string
-    execution_class    = string
-    glue_bucket_name = string
-    default_arguments = map(string)
+    worker_type            = string
+    number_of_workers      = number
+    worker_type_High       = string
+    number_of_workers_High = number
+    glue_version           = string
+    execution_class        = string
+    glue_bucket_name       = string
+    glue_bucket_name_storage = string
+    default_arguments      = map(string)
   })
 }
 
-variable "Glue_DataConnect-S3-PG-noJDBC" {
-  description = "DB Connection Name"
-  type        = string
-}
-
-variable "dbInstance" {
-  type = string
-}
-
-variable "dbName" {
-  type = string
-}
-
-variable "dbHostSAP" {
-  type = string
-}
-
-variable "dbPortSAP" {
-  type = string
-}
-
-variable "dbSecret" {
-  type = string
-}
-
-variable "dbSecretName" {
-  type = string
-}
-
-variable "dbSecretSAP" {
-  type = string
-}
-
-variable "dbSecretNameSAP" {
-  type = string
-}
-
-variable "glueConnectionSubnetID_DB" {
-  type = string
-}
-
-variable "glueConnectionSG_DB" {
-  type = list(string)
-}
-
-variable "glueConnectionAZ_DB" {
-  type = string
-}
-
-variable "glueConnectionSubnetID_NW1" {
-  type = string
-}
-
-variable "glueConnectionSG_NW1" {
-  type = list(string)
-}
-
-variable "glueConnectionAZ_NW1" {
-  type = string
-}
-
-variable "glueCodeVersion" {
-  type = string
-}
+variable "Glue_DataConnect-S3-PG-noJDBC" { type = string }
+variable "dbInstance" { type = string }
+variable "dbName" { type = string }
+variable "dbHostSAP" { type = string }
+variable "dbPortSAP" { type = string }
+variable "dbSecret" { type = string }
+variable "dbSecretName" { type = string }
+variable "dbSecretSAP" { type = string }
+variable "dbSecretNameSAP" { type = string }
+variable "glueConnectionSubnetID_DB" { type = string }
+variable "glueConnectionSG_DB" { type = list(string) }
+variable "glueConnectionAZ_DB" { type = string }
+variable "glueConnectionSubnetID_NW1" { type = string }
+variable "glueConnectionSG_NW1" { type = list(string) }
+variable "glueConnectionAZ_NW1" { type = string }
+variable "glueCodeVersion" { type = string }
+variable "env_prefix" { type = string }
 
 locals {
   bucket_name = var.script_bucket
   bucket_arn  = "arn:aws:s3:::${local.bucket_name}"
   bucket_name_storage = var.storage_bucket
 
-  commons_root      = "${path.module}/../_commons"
+  commons_root           = "${path.module}/../_commons"
   commons_s3_prefix      = "core/commons"
   aws_product_s3_prefix  = "glue/${var.glueCodeVersion}"
 
-  # Specs say "Glue 5.1"; AWS Glue Spark version string is 5.0.
-  glue_version_map = {
-    "Glue 5.1" = "5.0"
-    "Glue 4.0" = "4.0"
-  }
-
-  worker_type_map = {
-    "G 1X" = "G.1X"
-    "G 2X" = "G.2X"
-    "G 4X" = "G.4X"
-    "G 8X" = "G.8X"
-  }
- 
   s3_script = {
     GluePipelinesOrchestrator = "${local.commons_s3_prefix}/scripts/GluePipelinesOrchestrator.py"
     GlueSpreadsheet           = "${local.commons_s3_prefix}/scripts/GlueSpreadsheet.py"
@@ -341,7 +277,6 @@ locals {
       "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/${local.py.CustomDbConnLibs}",
       "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/${local.py.CustomErrorLibs}",
     ])
-    # Export job also imports FileExporter + ExportBillCycleMapping at runtime.
     dbsp_export = join(",", [
       "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/${local.py.DbSpCallerEx}",
       "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/${local.py.UtilsAWS}",

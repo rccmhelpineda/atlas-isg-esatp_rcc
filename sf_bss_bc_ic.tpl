@@ -1,5 +1,5 @@
 {
-  "Comment": "BSS Bill Cycle Run for Bayan",
+  "Comment": "BSS Bill Cycle Run for Innove",
   "StartAt": "Extract_1",
   "States": {
     "Extract_1": {
@@ -7,18 +7,20 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::glue:startJobRun.sync",
       "Parameters": {
-        "JobName.$": "States.Format('{}-etl_mybss-gljo-extract_1',$.env_prefix)",
+        "JobName.$": "States.Format('{}-mybss_ic-gljo-extract_1',$.env_prefix)",
         "Arguments": {
           "--CODE.$": "$.CODE",
           "--BCNUM.$": "$.BCNUM",
           "--BC.$": "$.BC",
-          "--input_file_name.$": "States.Format('308. Billed Adjustments Monthly Summary Report_B_{}.xlsx',$.BCNUM)",
-          "--target_table.$": "States.Format('sdbtdir2_bayan_dbo.308_Billed_Adjustments_{}',$.BCNUM)"
+          "--input_file_name.$": "States.Format('308. Billed Adjustments Monthly Summary Report_I_{}.xlsx',$.BCNUM)",
+          "--target_table.$": "States.Format('sdbtdir2_Innove_dbo.308_Billed_Adjustments_{}',$.BCNUM)"
         }
       },
       "Catch": [
         {
-          "ErrorEquals": ["States.ALL"],
+          "ErrorEquals": [
+            "States.ALL"
+          ],
           "ResultPath": "$.glue_error",
           "Next": "Notify_Fail"
         }
@@ -30,18 +32,20 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::glue:startJobRun.sync",
       "Parameters": {
-        "JobName.$": "States.Format('{}-etl_mybss-gljo-extract_2',$.env_prefix)",
+        "JobName.$": "States.Format('{}-mybss_ic-gljo-extract_2',$.env_prefix)",
         "Arguments": {
           "--CODE.$": "$.CODE",
           "--BCNUM.$": "$.BCNUM",
           "--BC.$": "$.BC",
-          "--input_file_name.$": "States.Format('318. Billed Charges Summary Report_B_{}.XLSX',$.BCNUM)",
-          "--target_table.$": "States.Format('sdbtdir2_bayan_dbo.318_Billed_Charges_{}',$.BCNUM)"
+          "--input_file_name.$": "States.Format('318. Billed Charges Summary Report_I_{}.XLSX',$.BCNUM)",
+          "--target_table.$": "States.Format('sdbtdir2_Innove_dbo.318_Billed_Charges_{}',$.BCNUM)"
         }
       },
       "Catch": [
         {
-          "ErrorEquals": ["States.ALL"],
+          "ErrorEquals": [
+            "States.ALL"
+          ],
           "ResultPath": "$.glue_error",
           "Next": "Notify_Fail"
         }
@@ -53,18 +57,20 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::glue:startJobRun.sync",
       "Parameters": {
-        "JobName.$": "States.Format('{}-etl_mybss-gljo-extract_3',$.env_prefix)",
+        "JobName.$": "States.Format('{}-mybss_ic-gljo-extract_3',$.env_prefix)",
         "Arguments": {
           "--CODE.$": "$.CODE",
           "--BCNUM.$": "$.BCNUM",
           "--BC.$": "$.BC",
-          "--input_file_name.$": "States.Format('411. Bill Control_PHP_B_{}.XLSX',$.BCNUM)",
-          "--target_table.$": "States.Format('sdbtdir2_bayan_dbo.411_Bill_Control_PHP_{}',$.BCNUM)"
+          "--input_file_name.$": "States.Format('411. Bill Control_PHP_I_{}.XLSX',$.BCNUM)",
+          "--target_table.$": "States.Format('sdbtdir2_Innove_dbo.411_Bill_Control_PHP_{}',$.BCNUM)"
         }
       },
       "Catch": [
         {
-          "ErrorEquals": ["States.ALL"],
+          "ErrorEquals": [
+            "States.ALL"
+          ],
           "ResultPath": "$.glue_error",
           "Next": "Notify_Fail"
         }
@@ -76,18 +82,20 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::glue:startJobRun.sync",
       "Parameters": {
-        "JobName.$": "States.Format('{}-etl_mybss-gljo-extract_4',$.env_prefix)",
+        "JobName.$": "States.Format('{}-mybss_ic-gljo-extract_4',$.env_prefix)",
         "Arguments": {
           "--CODE.$": "$.CODE",
           "--BCNUM.$": "$.BCNUM",
           "--BC.$": "$.BC",
-          "--target_table.$": "States.Format('sdbtdir2_bayan_dbo.411_Bill_Control_USD_{}',$.BCNUM)",
-          "--input_file_name.$": "States.Format('411. Bill Control_USD_B_{}.XLSX',$.BCNUM)"
+          "--target_table.$": "States.Format('sdbtdir2_Innove_dbo.411_Bill_Control_USD_{}',$.BCNUM)",
+          "--input_file_name.$": "States.Format('411. Bill Control_USD_I_{}.XLSX',$.BCNUM)"
         }
       },
       "Catch": [
         {
-          "ErrorEquals": ["States.ALL"],
+          "ErrorEquals": [
+            "States.ALL"
+          ],
           "ResultPath": "$.glue_error",
           "Next": "Notify_Fail"
         }
@@ -99,18 +107,20 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::glue:startJobRun.sync",
       "Parameters": {
-        "JobName.$": "States.Format('{}-etl_mybss-gljo-extract_5',$.env_prefix)",
+        "JobName.$": "States.Format('{}-mybss_ic-gljo-extract_5',$.env_prefix)",
         "Arguments": {
           "--CODE.$": "$.CODE",
           "--BCNUM.$": "$.BCNUM",
           "--BC.$": "$.BC",
-          "--target_table.$": "States.Format('sdbtdir2_bayan_dbo.sap_glbilled_{}',$.BCNUM)",
-          "--input_file_name.$": "States.Format('sap_glbilled_B_{}.txt',$.BCNUM)"
+          "--target_table.$": "States.Format('sdbtdir2_Innove_dbo.sap_glbilled_{}',$.BCNUM)",
+          "--input_file_name.$": "States.Format('sap_glbilled_I_{}.txt',$.BCNUM)"
         }
       },
       "Catch": [
         {
-          "ErrorEquals": ["States.ALL"],
+          "ErrorEquals": [
+            "States.ALL"
+          ],
           "ResultPath": "$.glue_error",
           "Next": "Notify_Fail"
         }
@@ -122,7 +132,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::glue:startJobRun.sync",
       "Parameters": {
-        "JobName.$": "States.Format('{}-etl_mybss-gljo-sap_preload',$.env_prefix)",
+        "JobName.$": "States.Format('{}-mybss_ic-gljo-sap_preload',$.env_prefix)",
         "Arguments": {
           "--CODE.$": "$.CODE",
           "--BCNUM.$": "$.BCNUM",
@@ -131,7 +141,9 @@
       },
       "Catch": [
         {
-          "ErrorEquals": ["States.ALL"],
+          "ErrorEquals": [
+            "States.ALL"
+          ],
           "ResultPath": "$.glue_error",
           "Next": "Notify_Fail"
         }
@@ -143,7 +155,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::glue:startJobRun.sync",
       "Parameters": {
-        "JobName.$": "States.Format('{}-etl_mybss-gljo-transform',$.env_prefix)",
+        "JobName.$": "States.Format('{}-mybss_ic-gljo-transform',$.env_prefix)",
         "Arguments": {
           "--CODE.$": "$.CODE",
           "--BCNUM.$": "$.BCNUM",
@@ -152,7 +164,9 @@
       },
       "Catch": [
         {
-          "ErrorEquals": ["States.ALL"],
+          "ErrorEquals": [
+            "States.ALL"
+          ],
           "ResultPath": "$.glue_error",
           "Next": "Notify_Fail"
         }
@@ -164,7 +178,7 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::glue:startJobRun.sync",
       "Parameters": {
-        "JobName.$": "States.Format('{}-etl_mybss-gljo-export_prep',$.env_prefix)",
+        "JobName.$": "States.Format('{}-mybss_ic-gljo-export_prep',$.env_prefix)",
         "Arguments": {
           "--CODE.$": "$.CODE",
           "--BCNUM.$": "$.BCNUM",
@@ -173,7 +187,9 @@
       },
       "Catch": [
         {
-          "ErrorEquals": ["States.ALL"],
+          "ErrorEquals": [
+            "States.ALL"
+          ],
           "ResultPath": "$.glue_error",
           "Next": "Notify_Fail"
         }
@@ -185,44 +201,45 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::glue:startJobRun.sync",
       "Parameters": {
-        "JobName.$": "States.Format('{}-etl_mybss-gljo-export',$.env_prefix)",
+        "JobName.$": "States.Format('{}-mybss_ic-gljo-export',$.env_prefix)",
         "Arguments": {
           "--CODE.$": "$.CODE",
           "--BCNUM.$": "$.BCNUM",
           "--BC.$": "$.BC",
-          "--EXPORT.$": "States.Format('txBayan_Billed_{}_LoadFileSel.txt',$.CODE)"
+          "--EXPORT.$": "States.Format('txInnove_Billed_{}_LoadFileSel.txt',$.CODE)"
         }
       },
       "Catch": [
         {
-          "ErrorEquals": ["States.ALL"],
+          "ErrorEquals": [
+            "States.ALL"
+          ],
           "ResultPath": "$.glue_error",
           "Next": "Notify_Fail"
         }
       ],
       "Next": "Notify_Success"
     },
-
     "Notify_Success": {
       "Type": "Task",
       "Resource": "arn:aws:states:::states:startExecution",
       "Parameters": {
         "StateMachineArn.$": "States.Format('arn:aws:states:{}:{}:stateMachine:{}-notifier-sf','${aws_region}','${aws_account_id}',$.env_prefix)",
         "Input": {
-          "email_subject": "[SUCCESS] MyBSS Bill Cycle - Bayatel ",
+          "email_subject": "[SUCCESS] MyBSS Bill Cycle - Innove ",
           "email_body": "✅ Processing Complete: Your data has been successfully processed and the result file is ready for review."
         }
       },
       "End": true
     },
-    
+
     "Notify_Fail": {
       "Type": "Task",
       "Resource": "arn:aws:states:::states:startExecution",
       "Parameters": {
         "StateMachineArn.$": "States.Format('arn:aws:states:{}:{}:stateMachine:{}-notifier-sf','${aws_region}','${aws_account_id}',$.env_prefix)",
         "Input": {
-          "email_subject": "[FAILED] MyBSS Bill Cycle - Bayatel ",
+          "email_subject": "[FAILED] MyBSS Bill Cycle - Innove ",
           "email_body.$": "States.Format('❌ Processing Failed: Unexpected issue was encountered while processing. \n\nError: {}\n\nPlease check the cloudwatch logs for details.', $.glue_error.Cause)"
         }
       },

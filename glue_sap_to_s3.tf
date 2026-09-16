@@ -1,7 +1,5 @@
 module "glue_extract_sap" {
-  # source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-glue/aws"
   source = "./modules/aws-glue"
-  # version = "~>1.5.1"
 
   providers = {
     aws.environment = aws.environment,
@@ -57,9 +55,10 @@ module "glue_extract_sap" {
       name              = "sap_2_s3" 
       description       = "Pull SAP data and save to S3"
       glue_version      = "5.1"
-      worker_type       = "G.1X"
+      worker_type       = var.glue_job_configs.worker_type_High
+      number_of_workers = var.glue_job_configs.number_of_workers_High
       connections       = ["sapdb"]
-      number_of_workers = 5
+      number_of_workers = 3
 
       tags              = { PIPELINE = "Test SAP to S3" }
 
@@ -67,7 +66,7 @@ module "glue_extract_sap" {
         {
           name            = "glueetl"
           python_version  = "3"
-          script_location = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/core/testing/sap_to_s3_test.py"
+          script_location = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/${local.commons_s3_prefix}/scripts/GlueSAP_to_s3.py"
         }
       ]
 
@@ -83,9 +82,10 @@ module "glue_extract_sap" {
         "--secret_name"      = var.dbSecretNameSAP
         "--jdbc_url"         = "jdbc:sap://${var.dbHostSAP}:${var.dbPortSAP}/"
         "--s3_target_path"   = "s3://${local.bucket_name_storage}/SAP_tmp"
-        "--extra-jars"       = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/core/commons/artifacts/ngdbc-2.29.7.jar,s3://${local.bucket_name}/${local.aws_product_s3_prefix}/core/commons/artifacts/postgresql-42.7.13.jar"
-        "--table_name"      = "SAPPRD.AUFK"
-        "--final_file_name" = "from_SAP/for_ingestion/aufk_output.csv"
+        "--extra-jars"       = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/${local.commons_s3_prefix}/artifacts/ngdbc-2.29.7.jar,s3://${local.bucket_name}/${local.aws_product_s3_prefix}/${local.commons_s3_prefix}/artifacts/postgresql-42.7.13.jar"
+        "--table_name"       = "aufk"
+        "--query"            = ""
+        "--final_file_name" = "from_SAP/for_ingestion/aufk_output.json"
         }             
       )
     }

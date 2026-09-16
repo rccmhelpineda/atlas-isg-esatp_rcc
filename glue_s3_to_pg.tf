@@ -1,7 +1,5 @@
 module "glue_extract_s3pg" {
-  # source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-glue/aws"
   source = "./modules/aws-glue"
-  # version = "~>1.5.1"
 
   providers = {
     aws.environment = aws.environment,
@@ -29,12 +27,9 @@ module "glue_extract_s3pg" {
         description     = "JDBC connection to PostgreSQL database via Secrets Manager"
         connection_type = "JDBC"
         create_source_db_secret = false
-        source_secrets_manager_arn          = var.dbSecret
-        source_secrets_manager_name         = var.dbSecretName
-        source_secrets_manager_kms_key_arn = "*"
         
         connection_properties = {
-          JDBC_CONNECTION_URL = "jdbc:postgresql://${var.dbInstance}:1769/${var.dbName}"
+          JDBC_CONNECTION_URL = "jdbc:postgresql://${var.dbInstance}:${var.dbPort}/${var.dbName}"
         }
 
         physical_connection_requirements = [
@@ -60,8 +55,8 @@ module "glue_extract_s3pg" {
       name              = "s3_to_pg" 
       description       = "ingest to Postgres"
       glue_version      = "5.1"
-      worker_type       = "G.1X"
-      number_of_workers = 5
+      worker_type       = var.glue_job_configs.worker_type_High
+      number_of_workers = var.glue_job_configs.number_of_workers_High
       connections       = ["postgres"]
       tags              = { PIPELINE = "Test SAP to S3" }
 
@@ -69,7 +64,7 @@ module "glue_extract_s3pg" {
         {
           name            = "glueetl"
           python_version  = "3"
-          script_location = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/testing/s3_to_postgres_test.py"
+          script_location = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/${local.commons_s3_prefix}/scripts/GlueS3_to_pg.py"
         }
       ]
 
@@ -82,9 +77,10 @@ module "glue_extract_s3pg" {
         {
         "--TempDir"          = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
         "--user-jars-first"  = "true"
-        "--s3_path"          = "s3://${local.bucket_name_storage}/test/test_output.csv"
-        "--table_name"       = "dgs4hana_tdir1_dbo.aufk"
-        "--extra-jars"       = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/core/commons/artifacts/ngdbc-2.29.7.jar,s3://${local.bucket_name}/${local.aws_product_s3_prefix}/core/commons/artifacts/postgresql-42.7.13.jar"
+        "--s4_table_name"    = "aufk"
+        "--pg_table_name"    = "dgs4hana_tdir1_dbo.aufk"
+        "--input_file_name"  = "s3://${local.bucket_name_storage}/from_SAP/aufk_output.csv"
+        "--extra-jars"       = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/${local.commons_s3_prefix}/artifacts/ngdbc-2.29.7.jar,s3://${local.bucket_name}/${local.aws_product_s3_prefix}/${local.commons_s3_prefix}/artifacts/postgresql-42.7.13.jar"
        }             
       )
     }    

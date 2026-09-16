@@ -6,9 +6,7 @@ locals {
 }
 
 module "glue_extract" {
-  # source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-glue/aws"
   source = "./modules/aws-glue"
-  # version = "~>1.5.1"
 
   providers = {
     aws.environment = aws.environment,
@@ -43,7 +41,7 @@ module "glue_extract" {
         create_source_db_secret = false
         
         connection_properties = {
-          JDBC_CONNECTION_URL = "jdbc:postgresql://${var.dbInstance}:1769/${var.dbName}"
+          JDBC_CONNECTION_URL = "jdbc:postgresql://${var.dbInstance}:${var.dbPort}/${var.dbName}"
         }
 
         physical_connection_requirements = [
@@ -69,9 +67,9 @@ module "glue_extract" {
     { # 
       name              = "extract_mgr" 
       description       = "Mybss_billcycle_bayn_preload_extract-glue : Orchestrator: start extract child jobs (308, 318, 411 PHP/USD, SAP glbilled)"
-      glue_version       = "5.1"
-      worker_type       = "G.1X"
-      number_of_workers = 5
+      glue_version      = "5.1"
+      worker_type       = "5.4X"
+      number_of_workers = 1
       tags              = { PIPELINE = "MyBSS BC Bayan" }
 
       glue_job_command  = [
@@ -83,15 +81,15 @@ module "glue_extract" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 1
       }
 
       default_arguments = merge(
         var.glue_job_configs.default_arguments,
         {
         "--TempDir"          = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
-        "--extra-py-files"      = local.extra_py.orchestrator
-        "--job_list"         = "isg-esatp-dv-etl_mybss-gljo-extract_1,isg-esatp-dv-etl_mybss-gljo-extract_2,isg-esatp-dv-etl_mybss-gljo-extract_3,isg-esatp-dv-etl_mybss-gljo-extract_4,isg-esatp-dv-etl_mybss-gljo-extract_5"
+        "--extra-py-files"   = local.extra_py.orchestrator
+        "--job_list"         = "${var.env_prefix}-etl_mybss-gljo-extract_1,${var.env_prefix}-etl_mybss-gljo-extract_2,${var.env_prefix}-etl_mybss-gljo-extract_3,${var.env_prefix}-etl_mybss-gljo-extract_4,${var.env_prefix}-etl_mybss-gljo-extract_5"
         "--passed_parameter" = var.default_passed_parameter   
         }             
       )
@@ -101,8 +99,8 @@ module "glue_extract" {
       name              = "extract_1"
       description       = "Mybss_billcycle_bayn_preload_extract-glue_308 : Extract 308 billed adjustments Excel → Aurora"
       glue_version       = "4.0"
-      worker_type       = "G.1X"
-      number_of_workers = 10
+      worker_type       = var.glue_job_configs.worker_type
+      number_of_workers = var.glue_job_configs.number_of_workers
       connections       = ["postgres"]
       tags              = { INGESTION_TYPE = "EXCEL_STRAIGHT-FLAT" }
 
@@ -125,11 +123,11 @@ module "glue_extract" {
         "--user-jars-first"  = "true"
         "--extra-py-files"   = local.extra_py.spreadsheet
         "--extra-jars"       = local.extra_jars
-        "--connection_name"  = "isg-esatp-dv-etl_mybss-glco-postgres"
-        "--target_table"     = "sdbtdir2_bayan_dbo.308_Billed_Adjustments_27"
+        "--connection_name"  = "${var.env_prefix}-etl_mybss-glco-postgres"
         "--audit_table"      = "sdbtdir2_bayan_dbo.308_Billed_Adjustments_ssis"
         "--folder_location"  = local.folder_bayn
-        "--input_file_name"  = "308. Billed Adjustments Monthly Summary Report_B_27.xlsx"
+        "--input_file_name"  = "308. Billed Adjustments Monthly Summary Report_B_{BCNUM}.xlsx"
+        "--target_table"     = "sdbtdir2_bayan_dbo.308_Billed_Adjustments_{BCNUM}"
         "--passed_parameter" = var.default_passed_parameter
       }
       )
@@ -139,8 +137,8 @@ module "glue_extract" {
       name              = "extract_2"
       description       = "Mybss_billcycle_bayn_preload_extract-glue_318 : Extract 318 billed charges Excel → Aurora"
       glue_version      = "4.0"
-      worker_type       = "G.1X"
-      number_of_workers = 10
+      worker_type       = var.glue_job_configs.worker_type
+      number_of_workers = var.glue_job_configs.number_of_workers
       connections       = ["postgres"]
       tags              = { INGESTION_TYPE = "EXCEL_STRAIGHT-FLAT" }
 
@@ -163,11 +161,11 @@ module "glue_extract" {
         "--user-jars-first"  = "true"
         "--extra-py-files"   = local.extra_py.spreadsheet
         "--extra-jars"       = local.extra_jars
-        "--connection_name"  = "isg-esatp-dv-etl_mybss-glco-postgres"
-        "--target_table"     = "sdbtdir2_bayan_dbo.318_Billed_Charges_27"
+        "--connection_name"  = "${var.env_prefix}-etl_mybss-glco-postgres"
         "--audit_table"      = "sdbtdir2_bayan_dbo.318_Billed_Charges_ssis"
         "--folder_location"  = local.folder_bayn
-        "--input_file_name"  = "318. Billed Charges Summary Report_B_27.XLSX"
+        "--input_file_name"  = "318. Billed Charges Summary Report_B_{BCNUM}.XLSX"
+        "--target_table"     = "sdbtdir2_bayan_dbo.318_Billed_Charges_{BCNUM}"
         "--passed_parameter" = var.default_passed_parameter
       }
       )
@@ -177,8 +175,8 @@ module "glue_extract" {
       name              = "extract_3"
       description       = "Mybss_billcycle_bayn_preload_extract-glue_411PHP : Extract 411 bill control PHP Excel → Aurora"
       glue_version      = "4.0"
-      worker_type       = "G.1X"
-      number_of_workers = 10
+      worker_type       = var.glue_job_configs.worker_type
+      number_of_workers = var.glue_job_configs.number_of_workers
       connections       = ["postgres"]
       tags              = { INGESTION_TYPE = "EXCEL_STRAIGHT-FLAT" }
 
@@ -199,13 +197,13 @@ module "glue_extract" {
       {
         "--TempDir"          = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
         "--user-jars-first"  = "true"
-        "--connection_name"  = "isg-esatp-dv-etl_mybss-glco-postgres"
+        "--connection_name"  = "${var.env_prefix}-etl_mybss-glco-postgres"
         "--extra-py-files"   = local.extra_py.spreadsheet
         "--extra-jars"       = local.extra_jars        
-        "--target_table"     = "sdbtdir2_bayan_dbo.411_Bill_Control_PHP_27"
         "--audit_table"      = "sdbtdir2_bayan_dbo.411_Bill_Control_PHP_ssis"
         "--folder_location"  = local.folder_bayn
-        "--input_file_name"  = "411. Bill Control_PHP_B_27.XLSX"
+        "--input_file_name"  = "411. Bill Control_PHP_B_{BCNUM}.XLSX"
+        "--target_table"     = "sdbtdir2_bayan_dbo.411_Bill_Control_PHP_{BCNUM}"
         "--passed_parameter" = var.default_passed_parameter
       }
       )
@@ -215,8 +213,8 @@ module "glue_extract" {
       name              = "extract_4"
       description       = "Mybss_billcycle_bayn_preload_extract-glue_411USD : Extract 411 bill control USD Excel → Aurora"
       glue_version      = "4.0"
-      worker_type       = "G.1X"
-      number_of_workers = 10
+      worker_type       = var.glue_job_configs.worker_type
+      number_of_workers = var.glue_job_configs.number_of_workers
       connections       = ["postgres"]
       tags              = { INGESTION_TYPE = "EXCEL_STRAIGHT-FLAT" }
 
@@ -237,13 +235,13 @@ module "glue_extract" {
       {
         "--TempDir"          = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
         "--user-jars-first"  = "true"
-        "--connection_name"  = "isg-esatp-dv-etl_mybss-glco-postgres"
+        "--connection_name"  = "${var.env_prefix}-etl_mybss-glco-postgres"
         "--extra-py-files"   = local.extra_py.spreadsheet
-        "--extra-jars"       = local.extra_jars        
-        "--target_table"     = "sdbtdir2_bayan_dbo.411_Bill_Control_USD_27"
+        "--extra-jars"       = local.extra_jars
+        "--target_table"     = "sdbtdir2_bayan_dbo.411_Bill_Control_USD_{BCNUM}"
+        "--input_file_name"  = "411. Bill Control_USD_B_{BCNUM}.XLSX"
         "--audit_table"      = "sdbtdir2_bayan_dbo.411_Bill_Control_USD_ssis"
         "--folder_location"  = local.folder_bayn
-        "--input_file_name"  = "411. Bill Control_USD_B_27.XLSX"
         "--passed_parameter" = var.default_passed_parameter
       }
       )
@@ -253,8 +251,8 @@ module "glue_extract" {
       name              = "extract_5"
       description       = "Mybss_billcycle_bayn_preload_extract-glue_SAP_glbilled : Extract SAP glbilled text → Aurora"
       glue_version      = "5.1"
-      worker_type       = "G.1X"
-      number_of_workers = 10
+      worker_type       = var.glue_job_configs.worker_type
+      number_of_workers = var.glue_job_configs.number_of_workers
       connections       = ["postgres"]
       tags              = { INGESTION_TYPE = "TXT_NUMBERED" }
 
@@ -275,12 +273,12 @@ module "glue_extract" {
       {
         "--TempDir"          = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
         "--user-jars-first"    = "true"
-        "--connection_name"    = "isg-esatp-dv-etl_mybss-glco-postgres"
+        "--connection_name"    = "${var.env_prefix}-etl_mybss-glco-postgres"
         "--extra-py-files"     = local.extra_py.text
-        "--target_table"       = "sdbtdir2_bayan_dbo.sap_glbilled_27"
+        "--target_table"       = "sdbtdir2_bayan_dbo.sap_glbilled_{BCNUM}"
+        "--input_file_name"    = "sap_glbilled_B_{BCNUM}.txt"
         "--audit_table"        = "sdbtdir2_bayan_dbo.sap_glbilled_ssis"
         "--folder_location"    = local.folder_bayn
-        "--input_file_name"    = "sap_glbilled_B_27.txt"
         "--passed_parameter"   = var.default_passed_parameter
         "--SP_PARAMS"          = "Yes"
         "--delimiter_regex"    = "\\t"
@@ -296,8 +294,8 @@ module "glue_extract" {
       name              = "sap_preload"
       description       = "Mybss_billcycle_bayn_preload_sap-glue : Call Aurora SP sp_mybss_bayan_eoc_preload_loadsaptables"
       glue_version      = "5.1"
-      worker_type       = "G.1X"
-      number_of_workers = 10
+      worker_type       = var.glue_job_configs.worker_type
+      number_of_workers = var.glue_job_configs.number_of_workers
       connections       = ["postgres"]
       tags              = { PIPELINE = "MyBSS BC Bayan" }
 
@@ -317,7 +315,7 @@ module "glue_extract" {
         var.glue_job_configs.default_arguments,
       {
         "--TempDir"          = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
-        "--CONN_DB_TO"      = "isg-esatp-dv-etl_mybss-glco-postgres"
+        "--CONN_DB_TO"      = "${var.env_prefix}-etl_mybss-glco-postgres"
         "--extra-py-files"  = local.extra_py.dbsp
         "--FOLDER_LOCATION" = local.folder_logs_tran
         "--PROCEDURE_NAME"  = "dswtdir2_bayan_dbo.sp_mybss_bayan_eoc_preload_loadsaptables"
@@ -329,8 +327,8 @@ module "glue_extract" {
       name              = "transform"
       description       = "Mybss_billcycle_bayn_preload_tran-glue : Call Aurora SP sp_mybss_bayan_eoc_preload_transform_dummy"
       glue_version       = "5.1"
-      worker_type       = "G.1X"
-      number_of_workers = 10
+      worker_type       = var.glue_job_configs.worker_type
+      number_of_workers = var.glue_job_configs.number_of_workers
       connections       = ["postgres"]
       tags              = { PIPELINE = "MyBSS BC Bayan" }
       
@@ -350,7 +348,7 @@ module "glue_extract" {
         var.glue_job_configs.default_arguments,
       {
         "--TempDir"          = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
-        "--CONN_DB_TO"      = "isg-esatp-dv-etl_mybss-glco-postgres"
+        "--CONN_DB_TO"      = "${var.env_prefix}-etl_mybss-glco-postgres"
         "--extra-py-files"  = local.extra_py.dbsp
         "--FOLDER_LOCATION" = local.folder_logs_tran
         "--PROCEDURE_NAME"  = "dswtdir2_bayan_dbo.sp_mybss_bayan_eoc_preload_transform_dummy"
@@ -365,8 +363,8 @@ module "glue_extract" {
       name              = "export_prep"
       description       = "Mybss_billcycle_bayn_preload_export_prepare-glue : Call Aurora SP sp_mybss_bayan_eoc_preload_report_prepare_dummy"
       glue_version       = "5.1"
-      worker_type       = "G.1X"
-      number_of_workers = 10
+      worker_type       = var.glue_job_configs.worker_type
+      number_of_workers = var.glue_job_configs.number_of_workers
       connections       = ["postgres"]
       tags              = { PIPELINE = "MyBSS BC Bayan" }
       
@@ -386,7 +384,7 @@ module "glue_extract" {
         var.glue_job_configs.default_arguments,
       {
         "--TempDir"          = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
-        "--CONN_DB_TO"      = "isg-esatp-dv-etl_mybss-glco-postgres"
+        "--CONN_DB_TO"      = "${var.env_prefix}-etl_mybss-glco-postgres"
         "--extra-py-files"  = local.extra_py.dbsp
         "--FOLDER_LOCATION" = local.folder_logs_exp
         "--PROCEDURE_NAME"  = "dswtdir2_bayan_dbo.sp_mybss_bayan_eoc_preload_report_prepare_dummy"
@@ -400,8 +398,8 @@ module "glue_extract" {
       name              = "export"
       description       = "Mybss_billcycle_bayn_preload_export-glue : Call transform SP then export billed load file to outbound/"
       glue_version       = "5.1"
-      worker_type       = "G.1X"
-      number_of_workers = 10
+      worker_type       = var.glue_job_configs.worker_type
+      number_of_workers = var.glue_job_configs.number_of_workers
       connections       = ["postgres"]
       execution_class   = "STANDARD"
       tags              = { PIPELINE = "MyBSS BC Bayan" }
@@ -423,7 +421,7 @@ module "glue_extract" {
         var.glue_job_configs.default_arguments,
       {
         "--TempDir"          = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
-        "--CONN_DB_TO"          = "isg-esatp-dv-etl_mybss-glco-postgres"
+        "--CONN_DB_TO"          = "${var.env_prefix}-etl_mybss-glco-postgres"
         "--extra-py-files"      = local.extra_py.dbsp_export
         "--FOLDER_LOCATION"  = local.folder_bayn
         "--PROCEDURE_NAME"   = "dswtdir2_bayan_dbo.sp_mybss_bayan_eoc_preload_transform_dummy"

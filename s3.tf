@@ -1,8 +1,6 @@
 
 module "s3_module" {
-  # source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
   source = "./modules/aws-s3"
-  # version = "~>2.9.0"
   providers = {
     aws.environment = aws.environment,
     aws.security    = aws.security,
@@ -139,9 +137,7 @@ module "s3_module" {
 }
 
 module "s3_module_2" {
-  # source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
   source = "./modules/aws-s3"
-  # version = "~>2.9.0"
   providers = {
     aws.environment = aws.environment,
     aws.security    = aws.security,
