@@ -68,7 +68,7 @@ module "glue_extract" {
       name              = "extract_mgr" 
       description       = "Mybss_billcycle_bayn_preload_extract-glue : Orchestrator: start extract child jobs (308, 318, 411 PHP/USD, SAP glbilled)"
       glue_version      = "5.1"
-      worker_type       = "G.4X"
+      worker_type       = var.glue_job_configs.worker_type_High
       number_of_workers = var.glue_job_configs.number_of_workers
       tags              = { PIPELINE = "MyBSS BC Bayan" }
 
@@ -272,7 +272,6 @@ module "glue_extract" {
         var.glue_job_configs.default_arguments,
       {
         "--TempDir"          = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
-        "--user-jars-first"    = "true"
         "--connection_name"    = "${var.env_prefix}-etl_mybss-glco-postgres"
         "--extra-py-files"     = local.extra_py.text
         "--target_table"       = "sdbtdir2_bayan_dbo.sap_glbilled_{BCNUM}"
@@ -280,7 +279,6 @@ module "glue_extract" {
         "--audit_table"        = "sdbtdir2_bayan_dbo.sap_glbilled_ssis"
         "--folder_location"    = local.folder_bayn
         "--passed_parameter"   = var.default_passed_parameter
-        "--SP_PARAMS"          = "Yes"
         "--delimiter_regex"    = "\\t"
         "--filter_record_type" = "ALL"
         "--expected_columns"   = "30"
