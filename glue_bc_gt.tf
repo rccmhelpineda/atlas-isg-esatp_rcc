@@ -223,17 +223,15 @@ module "glue_bill_cycle_globe" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
         var.glue_job_configs.default_arguments,
       {
         "--TempDir"            = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
-        "--user-jars-first"    = "true"
         "--connection_name"    = "${var.env_prefix}-mybss_gt-glco-postgres"
         "--extra-py-files"     = local.extra_py.text
-        "--extra-jars"         = local.extra_jars
         "--target_table"       = "sdbtdir2_globe_dbo.sapglbilled_{BCNUM}"
         "--audit_table"        = "sdbtdir2_globe_dbo.sapglbilled_ssis"
         "--folder_location"    = local.folder_globe
