@@ -65,7 +65,7 @@ module "glue_extract_ic" {
       name              = "extract_mgr" 
       description       = "Mybss_billcycle_inov_preload_extract-glue : Orchestrator: start extract child jobs (308, 318, 411 PHP/USD, SAP glbilled)"
       glue_version      = "5.1"
-      worker_type       = var.glue_job_configs.worker_type
+      worker_type       = var.glue_job_configs.worker_type_High
       number_of_workers = var.glue_job_configs.number_of_workers
       tags              = { PIPELINE = "MyBSS BC Innove" }
 
@@ -78,14 +78,14 @@ module "glue_extract_ic" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 1
       }
 
       default_arguments = merge(
         var.glue_job_configs.default_arguments,
         {
         "--TempDir"          = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
-        "--extra-py-files"      = local.extra_py.orchestrator
+        "--extra-py-files"   = local.extra_py.orchestrator
         "--job_list"         = "${var.env_prefix}-mybss_ic-gljo-extract_1,${var.env_prefix}-mybss_ic-gljo-extract_2,${var.env_prefix}-mybss_ic-gljo-extract_3,${var.env_prefix}-mybss_ic-gljo-extract_4,${var.env_prefix}-mybss_ic-gljo-extract_5"
         "--passed_parameter" = var.default_passed_parameter   
         }             
@@ -110,7 +110,7 @@ module "glue_extract_ic" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -148,7 +148,7 @@ module "glue_extract_ic" {
       ]
   
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -186,7 +186,7 @@ module "glue_extract_ic" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -224,7 +224,7 @@ module "glue_extract_ic" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -262,7 +262,7 @@ module "glue_extract_ic" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -277,7 +277,6 @@ module "glue_extract_ic" {
         "--audit_table"        = "sdbtdir2_innove_dbo.sap_glbilled_ssis"
         "--folder_location"    = local.folder_inov
         "--passed_parameter"   = var.default_passed_parameter
-        "--SP_PARAMS"          = "Yes"
         "--delimiter_regex"    = "\\t"
         "--filter_record_type" = "ALL"
         "--expected_columns"   = "30"
