@@ -108,7 +108,7 @@ module "glue_iccbs_ic" {
           "--TempDir"            = "s3://${local.bucket_name_storage}/${local.aws_product_s3_prefix}/tmp/"
           "--connection_name"    = "${var.env_prefix}-iccbs_ic-glco-postgres"
           "--extra-py-files"     = local.extra_py.text
-          "--target_table"       = "sap_flcu_php_ssis"
+          "--target_table"       = "sdbtdir1_iccbs_dbo.sap_flcu_php_ssis"
           "--folder_location"    = local.folder_iccbs_ic
           "--input_file_name"    = "sap_flcu_PHP.txt"
           "--delimiter_regex"    = "\\t"
@@ -148,7 +148,7 @@ module "glue_iccbs_ic" {
           "--TempDir"            = "s3://${local.bucket_name_storage}/${local.aws_product_s3_prefix}/tmp/"
           "--connection_name"    = "${var.env_prefix}-iccbs_ic-glco-postgres"
           "--extra-py-files"     = local.extra_py.text
-          "--target_table"       = "sap_flcb_usd_ssis"
+          "--target_table"       = "sdbtdir1_iccbs_dbo.sap_flcb_usd_ssis"
           "--folder_location"    = local.folder_iccbs_ic
           "--input_file_name"    = "sap_flcb_USD.txt"
           "--delimiter_regex"    = "\\t"
@@ -188,7 +188,7 @@ module "glue_iccbs_ic" {
           "--TempDir"            = "s3://${local.bucket_name_storage}/${local.aws_product_s3_prefix}/tmp/"
           "--connection_name"    = "${var.env_prefix}-iccbs_ic-glco-postgres"
           "--extra-py-files"     = local.extra_py.text
-          "--target_table"       = "sap_flcb_php_ssis"
+          "--target_table"       = "sdbtdir1_iccbs_dbo.sap_flcb_php_ssis"
           "--folder_location"    = local.folder_iccbs_ic
           "--input_file_name"    = "sap_flcb_PHP.txt"
           "--delimiter_regex"    = "\\t"
@@ -228,7 +228,7 @@ module "glue_iccbs_ic" {
           "--TempDir"            = "s3://${local.bucket_name_storage}/${local.aws_product_s3_prefix}/tmp/"
           "--connection_name"    = "${var.env_prefix}-iccbs_ic-glco-postgres"
           "--extra-py-files"     = local.extra_py.text
-          "--target_table"       = "sap_fdef_usd_ssis"
+          "--target_table"       = "sdbtdir1_iccbs_dbo.sap_fdef_usd_ssis"
           "--folder_location"    = local.folder_iccbs_ic
           "--input_file_name"    = "sap_fdef_USD.txt"
           "--delimiter_regex"    = "\\t"
@@ -268,7 +268,7 @@ module "glue_iccbs_ic" {
           "--TempDir"            = "s3://${local.bucket_name_storage}/${local.aws_product_s3_prefix}/tmp/"
           "--connection_name"    = "${var.env_prefix}-iccbs_ic-glco-postgres"
           "--extra-py-files"     = local.extra_py.text
-          "--target_table"       = "sap_fdef_php_ssis"
+          "--target_table"       = "sdbtdir1_iccbs_dbo.sap_fdef_php_ssis"
           "--folder_location"    = local.folder_iccbs_ic
           "--input_file_name"    = "sap_fdef_PHP.txt"
           "--delimiter_regex"    = "\\t"
