@@ -62,8 +62,8 @@ module "glue_bill_cycle_globe" {
     {
       name              = "extract_mgr"
       description       = "Mybss_billcycle_glob_preload_extract-glue : Orchestrator: start extract child jobs (308, 318, 411G, SAP glbilled)"
-      glue_version       = "5.1"
-      worker_type       = var.glue_job_configs.worker_type
+      glue_version      = var.glue_job_configs.glue_version
+      worker_type       = var.glue_job_configs.worker_type_High
       number_of_workers = var.glue_job_configs.number_of_workers
 
       tags              = { PIPELINE = "MyBSS BC Globe" }
@@ -77,7 +77,7 @@ module "glue_bill_cycle_globe" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 1
       }
 
       default_arguments = merge(
@@ -94,7 +94,7 @@ module "glue_bill_cycle_globe" {
     {
       name              = "extract_1"
       description       = "Mybss_billcycle_glob_preload_extract-glue_308 : Extract 308 billed adjustments Excel → Aurora"
-      glue_version       = "5.1"
+      glue_version       = "4.0"
       worker_type       = var.glue_job_configs.worker_type
       number_of_workers = var.glue_job_configs.number_of_workers
       connections       = ["postgres"]
@@ -109,21 +109,21 @@ module "glue_bill_cycle_globe" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
         var.glue_job_configs.default_arguments,
       {
-        "--TempDir"             = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
+        "--TempDir"          = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
         "--user-jars-first"  = "true"
         "--extra-py-files"   = local.extra_py.spreadsheet
         "--extra-jars"       = local.extra_jars
         "--connection_name"  = "${var.env_prefix}-mybss_gt-glco-postgres"
-        "--target_table"     = "sdbtdir2_globe_dbo.308_Billed_Adjustments_27"
+        "--target_table"     = "sdbtdir2_globe_dbo.308_Billed_Adjustments_{BCNUM}"
         "--audit_table"      = "sdbtdir2_globe_dbo.308_Billed_Adjustments_ssis"
         "--folder_location"  = local.folder_globe
-        "--input_file_name"  = "308. Billed Adjustments Monthly Summary Report_G_27.XLSX"
+        "--input_file_name"  = "308. Billed Adjustments Monthly Summary Report_G_{BCNUM}.XLSX"
         "--passed_parameter" = var.default_passed_parameter
       }
       )
@@ -132,7 +132,7 @@ module "glue_bill_cycle_globe" {
     {
       name              = "extract_2"
       description       = "Mybss_billcycle_glob_preload_extract-glue_318 : Extract 318 billed charges Excel → Aurora"
-      glue_version      = "5.1"
+      glue_version      = "4.0"
       worker_type       = var.glue_job_configs.worker_type
       number_of_workers = var.glue_job_configs.number_of_workers
       connections       = ["postgres"]
@@ -147,7 +147,7 @@ module "glue_bill_cycle_globe" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -158,10 +158,10 @@ module "glue_bill_cycle_globe" {
         "--extra-py-files"   = local.extra_py.spreadsheet
         "--extra-jars"       = local.extra_jars
         "--connection_name"  = "${var.env_prefix}-mybss_gt-glco-postgres"
-        "--target_table"     = "sdbtdir2_globe_dbo.318_Billed_Charges_27"
+        "--target_table"     = "sdbtdir2_globe_dbo.318_Billed_Charges_{BCNUM}"
         "--audit_table"      = "sdbtdir2_globe_dbo.318_Billed_Charges_ssis"
         "--folder_location"  = local.folder_globe
-        "--input_file_name"  = "318. Billed Charges Summary Report_G_27.XLSX"
+        "--input_file_name"  = "318. Billed Charges Summary Report_G_{BCNUM}.XLSX"
         "--passed_parameter" = var.default_passed_parameter
       }
       )
@@ -170,7 +170,7 @@ module "glue_bill_cycle_globe" {
     {
       name              = "extract_3"
       description       = "Mybss_billcycle_glob_preload_extract-glue_411G : Extract 411 bill control Globe Excel → Aurora"
-      glue_version      = "5.1"
+      glue_version      = "4.0"
       worker_type       = var.glue_job_configs.worker_type
       number_of_workers = var.glue_job_configs.number_of_workers
       connections       = ["postgres"]
@@ -185,7 +185,7 @@ module "glue_bill_cycle_globe" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -196,10 +196,10 @@ module "glue_bill_cycle_globe" {
         "--connection_name"  = "${var.env_prefix}-mybss_gt-glco-postgres"
         "--extra-py-files"   = local.extra_py.spreadsheet
         "--extra-jars"       = local.extra_jars
-        "--target_table"     = "sdbtdir2_globe_dbo.411_Bill_Control_G_27"
+        "--target_table"     = "sdbtdir2_globe_dbo.411_Bill_Control_G_{BCNUM}"
         "--audit_table"      = "sdbtdir2_globe_dbo.411_Bill_Control_ssis"
         "--folder_location"  = local.folder_globe
-        "--input_file_name"  = "411. Bill Control_PHP_G_27.XLSX"
+        "--input_file_name"  = "411. Bill Control_PHP_G_{BCNUM}.XLSX"
         "--passed_parameter" = var.default_passed_parameter
       }
       )
@@ -234,10 +234,10 @@ module "glue_bill_cycle_globe" {
         "--connection_name"    = "${var.env_prefix}-mybss_gt-glco-postgres"
         "--extra-py-files"     = local.extra_py.text
         "--extra-jars"         = local.extra_jars
-        "--target_table"       = "sdbtdir2_globe_dbo.sapglbilled_27"
+        "--target_table"       = "sdbtdir2_globe_dbo.sapglbilled_{BCNUM}"
         "--audit_table"        = "sdbtdir2_globe_dbo.sapglbilled_ssis"
         "--folder_location"    = local.folder_globe
-        "--input_file_name"    = "sap_glbilled_G_27.txt"
+        "--input_file_name"    = "sap_glbilled_G_{BCNUM}.txt"
         "--passed_parameter"   = var.default_passed_parameter
         "--delimiter_regex"    = "\\t"
         "--filter_record_type" = "ALL"
