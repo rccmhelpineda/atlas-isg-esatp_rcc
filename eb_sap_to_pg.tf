@@ -205,7 +205,7 @@ module "eventbridge_sap_to_pg_all_copy" {
   target_type = "stepfunctions"
   step_functions = "${var.env_prefix}-s4_2_pg_a2-sf"
 
-  schedule_expression_stepfunctions = "cron(55 4 * * ? *)"  #
+  schedule_expression_stepfunctions = "cron(35 7 * * ? *)"  #
   targets = [{
     name = "${var.env_prefix}-s4_2_pg_a2-sf",
     type = "stepfunctions"

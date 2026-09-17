@@ -78,8 +78,9 @@ module "glue_extract_s3pg" {
         "--TempDir"          = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/tmp/"
         "--user-jars-first"  = "true"
         "--s4_table_name"    = "aufk"
+        "--connection_name"  = "${var.env_prefix}-s3_to_pg-glco-postgres"
         "--pg_table_name"    = "dgs4hana_tdir1_dbo.aufk"
-        "--input_file_name"  = "s3://${local.bucket_name_storage}/from_SAP/aufk_output.csv"
+        "--input_file_name"  = "s3://${local.bucket_name_storage}/from_SAP/aufk_output.json"
         "--extra-jars"       = "s3://${local.bucket_name}/${local.aws_product_s3_prefix}/${local.commons_s3_prefix}/artifacts/ngdbc-2.29.7.jar,s3://${local.bucket_name}/${local.aws_product_s3_prefix}/${local.commons_s3_prefix}/artifacts/postgresql-42.7.13.jar"
        }             
       )

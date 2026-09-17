@@ -49,9 +49,9 @@ glueConnectionSG_NW1       = [
 #### Glue Job Configurations ####
 glue_job_configs = {
   worker_type              = "G.1X"
-  number_of_workers        = 4
-  worker_type_High         = "G.2X"
-  number_of_workers_High   = 2
+  number_of_workers        = 10
+  worker_type_High         = "G.4X"
+  number_of_workers_High   = 10
   glue_version             = "5.1"
   execution_class          = "STANDARD"
   glue_bucket_name         = "isg-esatp-rcc-scripts-os"

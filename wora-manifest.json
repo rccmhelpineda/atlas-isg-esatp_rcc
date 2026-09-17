@@ -1,0 +1,39 @@
+{
+  "client_git": "9ac6f5c2b72f77201a78783768b71a27219a7538",
+  "client_files": {
+    "eb_bss_bt.tf": "0be7a3372c085106",
+    "eb_bss_gt.tf": "b3907b104a70f181",
+    "eb_bss_ic.tf": "cb10dbc635355a34",
+    "eb_sap_to_pg.tf": "57498a495c0a5860",
+    "glue.tf": "d6ab8a3357e6e4e1",
+    "glue_aprm_acc.tf": "acc9ee368dd9bb0b",
+    "glue_bc_bt.tf": "2842c66bb82a454b",
+    "glue_bc_gt.tf": "8e9389fb03fafd96",
+    "glue_bc_ic.tf": "8cb685027a7bf290",
+    "glue_eom_gt.tf": "51298ea519bf376a",
+    "glue_s3_to_pg.tf": "1bc1302a37f8b4b1",
+    "glue_sap_to_s3.tf": "88ef91c883b48778",
+    "sf_bss_bc_bt.tpl": "fd9e4e2802d84d62",
+    "sf_bss_bc_gt.tpl": "5c65b71ab1552481",
+    "sf_bss_bc_ic.tpl": "26ec985f6d0080c8",
+    "sf_bss_eom_gt-msf.tpl": "d1fa6349a0c8cfa4",
+    "sf_bss_eom_gt.tpl": "70484461b146332d",
+    "sf_sap_to_pg.tpl": "90adacc8cfc28cc9",
+    "sf_sap_to_pg_acdoca.tpl": "6376f8c4a8002192",
+    "sf_sap_to_pg_bsak.tpl": "d7e32502ea69813c",
+    "sf_sap_to_pg_bsid.tpl": "2917c7eb6998cfef",
+    "sf_sap_to_pg_bsik.tpl": "60cee17847bdbd6d",
+    "sf_sap_to_pg_copy.tpl": "03ecbbdfadc71e43",
+    "sf_sap_to_pg_dd03l.tpl": "43e1883e3b0e7054",
+    "sf_sap_to_pg_prps.tpl": "00d11b69db3a5af7",
+    "sf_sap_to_pg_with_item.tpl": "d494542318652000",
+    "sfn_bss.tf": "638ef25106d0e0f4",
+    "sfn_sap_to_pg.tf": "22b098c004dc9420"
+  },
+  "last_sync_must_apply": [],
+  "notes": [
+    "Client Load JobName sap_to_s3-gljo-s3_to_pg is treated as s3_to_pg-gljo-s3_to_pg",
+    "Do not copy NEVER_COPY or ./modules or JFrog the other way",
+    "Keep sandbox extras eventbridge_bss_eom_gt and eventbridge_sap_to_pg_test"
+  ]
+}

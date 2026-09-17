@@ -68,8 +68,8 @@ module "glue_extract" {
       name              = "extract_mgr" 
       description       = "Mybss_billcycle_bayn_preload_extract-glue : Orchestrator: start extract child jobs (308, 318, 411 PHP/USD, SAP glbilled)"
       glue_version      = "5.1"
-      worker_type       = "5.4X"
-      number_of_workers = 1
+      worker_type       = "G.4X"
+      number_of_workers = var.glue_job_configs.number_of_workers
       tags              = { PIPELINE = "MyBSS BC Bayan" }
 
       glue_job_command  = [
@@ -113,7 +113,7 @@ module "glue_extract" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -151,7 +151,7 @@ module "glue_extract" {
       ]
   
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -189,7 +189,7 @@ module "glue_extract" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -227,7 +227,7 @@ module "glue_extract" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -265,7 +265,7 @@ module "glue_extract" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -308,7 +308,7 @@ module "glue_extract" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -341,7 +341,7 @@ module "glue_extract" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -377,7 +377,7 @@ module "glue_extract" {
       ]
 
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
@@ -414,7 +414,7 @@ module "glue_extract" {
 
  
       execution_property = {
-        max_concurrent_runs = 3
+        max_concurrent_runs = 12
       }
 
       default_arguments = merge(
