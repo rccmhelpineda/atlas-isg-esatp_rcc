@@ -51,10 +51,13 @@ Always from `atlas-isg-esatp_rcc`. You can run the commands, or ask the agent to
 5. Load Glue job name: `{env}-s3_to_pg-gljo-s3_to_pg` even if client main tpl says `sap_to_s3-gljo-s3_to_pg`.
 6. Orphan `sf_sap_to_pg_big_data.tpl`: not wired on client; scanner skips it until a `.tf` references it.
 
-## Last sync (2026-09-17, client `8a1ee50`)
+## Last sync (2026-09-19, client `aa2129e`)
 
-Applied:
+Applied (client content + sandbox adapters):
 
-- `eb_sap_to_pg.tf` copy rule: `cron(0 3 * * ? *)`
+- `sfn_sap_to_pg.tf` two machines: `s4_2_pg_as` / `s4_2_pg_ab` → `sf_sap_to_pg_small_2.tpl` / `sf_sap_to_pg_big_2.tpl` (`templatefile` + notifier)
+- `eb_sap_to_pg.tf` rules `s4_2_pgs_as` `cron(50 15 …)` and `s4_2_pgs_ab` `cron(0 18 …)`; big rule `step_functions` points at `s4_2_pg_ab-sf` (client still has `s4_2_pg_as-sf` on that field). Kept extra `eventbridge_sap_to_pg_test` on `s4_2_pg_as`
+- `glue_s4hana_to_pg.tf` (`./modules/aws-glue`, `glue_database = []`, `--aws_region` = `data.aws_region.current.name`). Removed colliding `glue_sap_to_s3.tf` / `glue_s3_to_pg.tf`
+- Copied `sf_sap_to_pg_{small,small_2,big,big_2}.tpl` with notifier rewrite
 
-No Glue job-arg change in `glue_bc_bt.tf` / `glue_bc_gt.tf` (hash-only vs last snapshot; adapters kept).
+Hash-only / adapter-only (no job-arg or BSS cron change): `eb_bss_*.tf`, `glue_aprm_acc.tf`, `glue_aprm_del.tf`, `glue_bc_*.tf`, `glue_eom_ic.tf`, `glue_iccbs_ic.tf`, `sf_sap_to_pg_acdoca.tpl`

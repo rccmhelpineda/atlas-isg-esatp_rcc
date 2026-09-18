@@ -48,7 +48,7 @@ SANDBOX_EXTRA_CRONS = {
     "cron(15 3 3 * ? *)",
     "cron(15 15 * * ? *)",
 }
-ARG = re.compile(r'"--[^"]+"\s*=\s*"[^"]*"')
+ARG = re.compile(r'"--[^"]+"\s*=\s*(?:"[^"]*"|[^\s,#}\n]+)')
 CRON = re.compile(r'schedule_expression_stepfunctions\s*=\s*"([^"]+)"')
 MOD = re.compile(r'^module\s+"([^"]+)"', re.M)
 JOBN = re.compile(r'"JobName(?:\.\$)?"\s*:\s*"([^"]+)"')
@@ -82,7 +82,13 @@ def git_head(repo: Path) -> str:
 def keys_tf(text: str) -> dict:
     mods = [m for m in MOD.findall(text) if m not in SANDBOX_EXTRA_MODULES]
     crons = [c for c in CRON.findall(text) if c not in SANDBOX_EXTRA_CRONS]
-    return {"modules": mods, "crons": crons, "args": ARG.findall(text)}
+    args = []
+    for a in ARG.findall(text):
+        a = re.sub(r"\s+", " ", a)
+        if a.startswith('"--aws_region"'):
+            a = '"--aws_region"="*"'
+        args.append(a)
+    return {"modules": mods, "crons": crons, "args": args}
 
 
 def keys_tpl(text: str) -> dict:
