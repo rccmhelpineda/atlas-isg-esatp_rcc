@@ -2591,7 +2591,7 @@
         }
       },
       "ResultPath": null,
-      "End": true
+      "Next": "Fail"
     },
     "Fail": {
       "Type": "Fail",
