@@ -9,9 +9,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-extract_mgr',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -32,9 +29,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-sap_preload',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -55,9 +49,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-transform_1',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -78,9 +69,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-export_1a',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -101,9 +89,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-export_1b',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -124,9 +109,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-transform_2',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -147,9 +129,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-export_2a',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -170,9 +149,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-export_2b',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -193,9 +169,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-transform_3',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -216,9 +189,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-export_3a',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -239,9 +209,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-export_3b',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -262,9 +229,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-transform_4',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -285,9 +249,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-export_4a',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -308,9 +269,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-export_4b',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -331,9 +289,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-export_4c',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -354,9 +309,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-transform_5',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -377,9 +329,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-export_5a',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -400,9 +349,6 @@
       "Parameters": {
         "JobName.$": "States.Format('{}-mybss_gt_eom-gljo-export_5b',$.env_prefix)",
         "Arguments": {
-          "--CODE.$": "$.CODE",
-          "--BCNUM.$": "$.BCNUM",
-          "--BC.$": "$.BC"
         }
       },
       "Catch": [
@@ -416,14 +362,15 @@
       ],
       "Next": "Notify_Success"
     },
+
     "Notify_Success": {
       "Type": "Task",
       "Resource": "arn:aws:states:::states:startExecution",
       "Parameters": {
-        "StateMachineArn": "States.Format('arn:aws:states:{}:{}:stateMachine:{}-notifier-sf','${aws_region}','${aws_account_id}',$.env_prefix)"
+        "StateMachineArn.$": "States.Format('arn:aws:states:{}:{}:stateMachine:{}-notifier-sf','${aws_region}','${aws_account_id}',$.env_prefix)",
         "Input": {
-          "email_subject": "[SUCCESS] MyBSS Mothend Processig - Globe ",
-          "email_body": "✅ Processing Complete: Your data has been successfully processed and the result file is ready for review."
+          "email_subject": "SUCCESS: AWS Glue Job Completed",
+          "email_body": "Your automated Step Functions workflow finished successfully."
         }
       },
       "End": true
@@ -433,14 +380,21 @@
       "Type": "Task",
       "Resource": "arn:aws:states:::states:startExecution",
       "Parameters": {
-        "StateMachineArn": "States.Format('arn:aws:states:{}:{}:stateMachine:{}-notifier-sf','${aws_region}','${aws_account_id}',$.env_prefix)"
+        "StateMachineArn.$": "States.Format('arn:aws:states:{}:{}:stateMachine:{}-notifier-sf','${aws_region}','${aws_account_id}',$.env_prefix)",
         "Input": {
-          "email_subject": "[FAILED] MyBSS Monthend Processing - Globe ",
-          "email_body.$": "States.Format('❌ Processing Failed: Unexpected issue was encountered while processing. \n\nError: {}\n\nPlease check the cloudwatch logs for details.', $.glue_error.Cause)"
+          "email_subject": "FAILED: AWS Glue Job Error",
+          "email_body.$": "States.Format('Your Step Functions workflow failed. Error Details: {}', $.glue_error)"
         }
       },
       "ResultPath": null,
-      "End": true
+      "Next": "Fail"
+    },
+
+    "Fail": {
+      "Type": "Fail",
+      "Error": "BSS End of Month Pipeline -  Globe",
+      "Cause": "The Glue Job or processing step failed."
     }
+
   }
 }

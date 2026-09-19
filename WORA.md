@@ -29,7 +29,22 @@ Always from `atlas-isg-esatp_rcc`. You can run the commands, or ask the agent to
 
 ## Copyable (content only)
 
-`glue.tf`, `glue_*.tf`, `eb_*.tf`, `sfn_bss.tf`, `sfn_sap_to_pg.tf`, `sf_bss_*.tpl`, `sf_sap_to_pg*.tpl`
+`glue.tf`, `glue_*.tf`, `eb_*.tf`, `sfn_bss.tf` / `sfn_mybss.tf`, `sfn_iccbs.tf`, `sfn_aprm.tf`, `sfn_sap_to_pg.tf`, `sf_bss_*.tpl` / `sf_mybss_*.tpl`, `sf_iccbs_*.tpl`, `sf_aprm_*.tpl`, `sf_sap_to_pg*.tpl`
+
+## File renames (same WORA, extra first step)
+
+Scan keys files by **name**. A client rename looks like `client_only` (new name) plus `sandbox_only` / `renames` (old name). That is still WORA.
+
+On execute WORA:
+
+1. `git mv` the sandbox file to the client name (keeps git history; does not change AWS if Terraform **module** addresses stay the same).
+2. Then apply client **content** with the usual adapters. Do not leave two copies of the same pipeline.
+3. Split files (e.g. `sfn_bss.tf` → `sfn_mybss.tf` + new `sfn_aprm.tf` / `sfn_iccbs.tf`): create the new sandbox files with adapters; drop modules that moved out of the old file.
+4. Same-name files (`glue_aprm_*.tf`, `glue_iccbs_*.tf`, SAP SFN/EB) stay name-keyed as before.
+
+Do **not** copy JFrog/postgres/network/tfvars either way. Sandbox extras stay (`eventbridge_bss_eom_gt`, `eventbridge_sap_to_pg_test`, `providers.tf` profile, `./modules`). Sandbox-born jobs are not auto-promoted to client.
+
+**Vice versa** means the same Glue/SFN **job content** can run in both accounts after adapters — not that sandbox infra is written onto client.
 
 ## Never copy (either direction)
 
@@ -45,19 +60,20 @@ Always from `atlas-isg-esatp_rcc`. You can run the commands, or ask the agent to
 ## Adapter when copying a file
 
 1. `source` → `./modules/aws-glue` (or eventbridge / step-functions / s3). Drop `version`.
-2. Extra Glue modules: `glue_database = []` (catalog `etl` owned by Bayan `glue_bc_bt.tf`).
+2. Extra Glue modules: `glue_database = []` (catalog `etl` owned by Bayan `glue_mybss_bc_bt.tf` / `module.glue_extract`).
 3. SFN: `templatefile(..., { env_prefix, aws_region, aws_account_id })` — not client `file()`.
 4. ASL: keep relative `from_SAP/...` and notifier SFN; do not paste client SES or `s3://isg-esatp-dv-storage-os/...`.
 5. Load Glue job name: `{env}-s3_to_pg-gljo-s3_to_pg` even if client main tpl says `sap_to_s3-gljo-s3_to_pg`.
 6. Orphan `sf_sap_to_pg_big_data.tpl`: not wired on client; scanner skips it until a `.tf` references it.
 
-## Last sync (2026-09-19, client `aa2129e`)
+## Last sync (2026-09-20, client `041a6e8`)
 
-Applied (client content + sandbox adapters):
+Renames (`git mv`) then client content + adapters:
 
-- `sfn_sap_to_pg.tf` two machines: `s4_2_pg_as` / `s4_2_pg_ab` → `sf_sap_to_pg_small_2.tpl` / `sf_sap_to_pg_big_2.tpl` (`templatefile` + notifier)
-- `eb_sap_to_pg.tf` rules `s4_2_pgs_as` `cron(50 15 …)` and `s4_2_pgs_ab` `cron(0 18 …)`; big rule `step_functions` points at `s4_2_pg_ab-sf` (client still has `s4_2_pg_as-sf` on that field). Kept extra `eventbridge_sap_to_pg_test` on `s4_2_pg_as`
-- `glue_s4hana_to_pg.tf` (`./modules/aws-glue`, `glue_database = []`, `--aws_region` = `data.aws_region.current.name`). Removed colliding `glue_sap_to_s3.tf` / `glue_s3_to_pg.tf`
-- Copied `sf_sap_to_pg_{small,small_2,big,big_2}.tpl` with notifier rewrite
+- `glue_bc_*` / `glue_eom_*` / `glue_myb_eom_bt.tf` → `glue_mybss_*`
+- `eb_bss_*` → `eb_mybss_*`; kept `eventbridge_bss_eom_gt`
+- `sfn_bss.tf` → `sfn_mybss.tf`; added `sfn_aprm.tf`, `sfn_iccbs.tf` (`templatefile` + notifier)
+- `sf_bss_*` → `sf_mybss_*`; new `sf_aprm_*`, `sf_iccbs_*`, `sf_mybss_eom_{bt,ic}.tpl`
+- Same-name: `glue_aprm_acc.tf`, `glue_aprm_del.tf`, `glue_iccbs_bt.tf`, `glue_s4hana_to_pg.tf`, `eb_sap_to_pg.tf` (`cron(30 14)` small; big `step_functions` still `s4_2_pg_ab-sf`; kept test rule), `sf_sap_to_pg_big_2.tpl`
 
-Hash-only / adapter-only (no job-arg or BSS cron change): `eb_bss_*.tf`, `glue_aprm_acc.tf`, `glue_aprm_del.tf`, `glue_bc_*.tf`, `glue_eom_ic.tf`, `glue_iccbs_ic.tf`, `sf_sap_to_pg_acdoca.tpl`
+Bayan `glue_extract` keeps catalog `etl`. GT/IC/EOM `glue_database = []`.

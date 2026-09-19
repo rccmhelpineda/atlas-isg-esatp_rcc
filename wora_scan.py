@@ -24,10 +24,35 @@ COPYABLE_GLOBS = [
     "glue_*.tf",
     "eb_*.tf",
     "sfn_bss.tf",
+    "sfn_mybss.tf",
+    "sfn_iccbs.tf",
+    "sfn_aprm.tf",
     "sfn_sap_to_pg.tf",
     "sf_bss_*.tpl",
+    "sf_mybss_*.tpl",
+    "sf_iccbs_*.tpl",
+    "sf_aprm_*.tpl",
     "sf_sap_to_pg*.tpl",
 ]
+# Old sandbox filename -> current client filename. Scan prints these so WORA
+# can git-mv sandbox files then apply content+adapters. Not a content copy.
+RENAME_MAP = {
+    "glue_bc_bt.tf": "glue_mybss_bc_bt.tf",
+    "glue_bc_gt.tf": "glue_mybss_bc_gt.tf",
+    "glue_bc_ic.tf": "glue_mybss_bc_ic.tf",
+    "glue_eom_gt.tf": "glue_mybss_eom_gt.tf",
+    "glue_eom_ic.tf": "glue_mybss_eom_ic.tf",
+    "glue_myb_eom_bt.tf": "glue_mybss_eom_bt.tf",
+    "eb_bss_bt.tf": "eb_mybss_bt.tf",
+    "eb_bss_gt.tf": "eb_mybss_gt.tf",
+    "eb_bss_ic.tf": "eb_mybss_ic.tf",
+    "sfn_bss.tf": "sfn_mybss.tf",
+    "sf_bss_bc_bt.tpl": "sf_mybss_bc_bt.tpl",
+    "sf_bss_bc_gt.tpl": "sf_mybss_bc_gt.tpl",
+    "sf_bss_bc_ic.tpl": "sf_mybss_bc_ic.tpl",
+    "sf_bss_eom_gt.tpl": "sf_mybss_eom_gt.tpl",
+    "sf_bss_eom_gt-msf.tpl": "sf_mybss_eom_gt-msf.tpl",
+}
 NEVER_COPY = {
     "sfn_job_status.tf",
     "sf_job_status_notif.tpl",
@@ -129,6 +154,11 @@ def main() -> None:
     client_files = {}
     changed, new, unchanged = [], [], []
     must_apply, client_only = [], []
+    sandbox_only = [n for n in sandbox_names if n not in client_names]
+    renames = []
+    for old, new_name in RENAME_MAP.items():
+        if old in sandbox_names and new_name in client_names:
+            renames.append(f"{old} -> {new_name}")
 
     for name in client_names:
         raw = (CLIENT / name).read_bytes()
@@ -167,6 +197,8 @@ def main() -> None:
     print("changed_vs_last:", changed or "-")
     print("new_vs_last:", new or "-")
     print("client_only:", client_only or "-")
+    print("sandbox_only:", sandbox_only or "-")
+    print("renames:", renames or "-")
     print("must_apply_content:", must_apply or "-")
     print("READ_THESE:", report["read_these"] or "-")
 

@@ -21,8 +21,7 @@ module "glue_eom_globe" {
 
   sns_topic_name = null
 
-  # Catalog DB etl is owned by module.glue_extract (glue_bc_bt.tf).
-  glue_database = []
+  glue_database  = []
 
   source_secrets_manager_arn         = var.dbSecret
   source_secrets_manager_name         = var.dbSecretName

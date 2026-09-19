@@ -12,13 +12,13 @@ module "eventbridge_sap_to_pg_all_small" {
   target_type = "stepfunctions"
   step_functions = "${var.env_prefix}-s4_2_pg_as-sf"
 
-  schedule_expression_stepfunctions = "cron(50 15 * * ? *)"  #
+  schedule_expression_stepfunctions = "cron(30 14 * * ? *)"  #
   targets = [{
     name = "${var.env_prefix}-s4_2_pg_as-sf"
     type = "stepfunctions"
     input = jsonencode({
         env_prefix = "${var.env_prefix}"
-    })
+    })      
   }]
 }
 
@@ -38,15 +38,14 @@ module "eventbridge_sap_to_pg_all_big" {
 
   schedule_expression_stepfunctions = "cron(0 18 * * ? *)"  #
   targets = [{
-    name = "${var.env_prefix}-s4_2_pg_ab-sf"
+    name = "${var.env_prefix}-s4_2_pg_ab-sf",
     type = "stepfunctions"
     input = jsonencode({
         env_prefix = "${var.env_prefix}"
-    })
+    })      
   }]
 }
 
-# Sandbox extra. Keep; retargeted off removed s4_2_pg_all.
 module "eventbridge_sap_to_pg_test" {
   source = "./modules/aws-eventbridge"
 

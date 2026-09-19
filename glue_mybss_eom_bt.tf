@@ -16,7 +16,7 @@ module "glue_myb_eom_bt" {
   }
 
   s3_bucket_name = ["storage", "scripts"]
-  name           = "myb_eom_bt"
+  name           = "mybss_bt_eom"
   sns_topic_name = null
   glue_database  = []
 

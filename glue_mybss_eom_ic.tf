@@ -43,7 +43,7 @@ module "glue_eom_innove" {
         {
             availability_zone      = var.glueConnectionAZ_NW1
             subnet_id              = var.glueConnectionSubnetID_NW1
-            security_group_id_list = [var.glueConnectionSG_NW1[2]]
+            security_group_id_list = [var.glueConnectionSG_NW1[6]]
         }
         ]
     }

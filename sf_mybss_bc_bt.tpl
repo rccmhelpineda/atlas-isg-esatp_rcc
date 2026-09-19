@@ -209,25 +209,32 @@
       "Parameters": {
         "StateMachineArn.$": "States.Format('arn:aws:states:{}:{}:stateMachine:{}-notifier-sf','${aws_region}','${aws_account_id}',$.env_prefix)",
         "Input": {
-          "email_subject": "[SUCCESS] MyBSS Bill Cycle - Bayatel ",
-          "email_body": "✅ Processing Complete: Your data has been successfully processed and the result file is ready for review."
+          "email_subject": "SUCCESS: AWS Glue Job Completed",
+          "email_body": "Your automated Step Functions workflow finished successfully."
         }
       },
       "End": true
     },
-    
+
     "Notify_Fail": {
       "Type": "Task",
       "Resource": "arn:aws:states:::states:startExecution",
       "Parameters": {
         "StateMachineArn.$": "States.Format('arn:aws:states:{}:{}:stateMachine:{}-notifier-sf','${aws_region}','${aws_account_id}',$.env_prefix)",
         "Input": {
-          "email_subject": "[FAILED] MyBSS Bill Cycle - Bayatel ",
-          "email_body.$": "States.Format('❌ Processing Failed: Unexpected issue was encountered while processing. \n\nError: {}\n\nPlease check the cloudwatch logs for details.', $.glue_error.Cause)"
+          "email_subject": "FAILED: AWS Glue Job Error",
+          "email_body.$": "States.Format('Your Step Functions workflow failed. Error Details: {}', $.glue_error)"
         }
       },
       "ResultPath": null,
-      "End": true
+      "Next": "Fail"
+    },
+
+    "Fail": {
+      "Type": "Fail",
+      "Error": "BSS Bill Cycle Pipeline -  Bayantel",
+      "Cause": "The Glue Job or processing step failed."
     }
+
   }
 }

@@ -130,9 +130,10 @@ module "glue_aprm_acc_bt" {
         {
           availability_zone      = var.glueConnectionAZ_NW1
           subnet_id              = var.glueConnectionSubnetID_NW1
-          security_group_id_list = [var.glueConnectionSG_NW1[0]]
+          security_group_id_list = var.glueConnectionSG_NW1
         }
-      ]
+
+        ]
     }
   ]
 
@@ -291,7 +292,7 @@ module "glue_aprm_acc_gt" {
         {
           availability_zone      = var.glueConnectionAZ_NW1
           subnet_id              = var.glueConnectionSubnetID_NW1
-          security_group_id_list = [var.glueConnectionSG_NW1[1]]
+          security_group_id_list = var.glueConnectionSG_NW1
         }
       ]
     }
@@ -452,7 +453,8 @@ module "glue_aprm_acc_ic" {
         {
           availability_zone      = var.glueConnectionAZ_NW1
           subnet_id              = var.glueConnectionSubnetID_NW1
-          security_group_id_list = [var.glueConnectionSG_NW1[0]]
+          security_group_id_list = var.glueConnectionSG_NW1
+           
         }
       ]
     }
@@ -613,7 +615,7 @@ module "glue_aprm_acc" {
         {
           availability_zone      = var.glueConnectionAZ_NW1
           subnet_id              = var.glueConnectionSubnetID_NW1
-          security_group_id_list = [var.glueConnectionSG_NW1[0]]
+          security_group_id_list = var.glueConnectionSG_NW1
         }
       ]
     }

@@ -28,6 +28,7 @@ module "eventbridge_bss_bc_bt_1" {
 module "eventbridge_bss_bc_bt_2" {
   source = "./modules/aws-eventbridge"
 
+
   providers = {
     aws.environment = aws.environment
     aws.security    = aws.security
@@ -54,6 +55,7 @@ module "eventbridge_bss_bc_bt_2" {
 
 module "eventbridge_bss_bc_bt_3" {
   source = "./modules/aws-eventbridge"
+
 
   providers = {
     aws.environment = aws.environment

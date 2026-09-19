@@ -23,8 +23,7 @@ module "glue_extract_ic" {
 
   sns_topic_name = null
 
-  # Catalog DB etl is owned by module.glue_extract (glue_bc_bt.tf).
-  glue_database = []
+  glue_database  = []
   
   source_secrets_manager_arn          = var.dbSecret
   source_secrets_manager_name         = var.dbSecretName
@@ -45,7 +44,7 @@ module "glue_extract_ic" {
         {
             availability_zone      = var.glueConnectionAZ_NW1
             subnet_id              = var.glueConnectionSubnetID_NW1
-            security_group_id_list = [var.glueConnectionSG_NW1[0]]
+            security_group_id_list = [var.glueConnectionSG_NW1[5]]
         }
         ]
     }
